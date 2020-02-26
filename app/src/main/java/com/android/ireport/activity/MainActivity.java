@@ -1,9 +1,7 @@
-package com.android.ireport.activities;
+package com.android.ireport.activity;
 
 import android.content.Intent;
-import android.graphics.Camera;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -13,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.android.ireport.fragments.HomeFragment;
+import com.android.ireport.fragment.HomeFragment;
 import com.android.ireport.R;
-import com.android.ireport.fragments.UserDetailsFragment;
+import com.android.ireport.fragment.UserDetailsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,15 +40,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        conditionTextView = findViewById(R.id.textView);
+
         buttonFoggy = findViewById(R.id.foggy_button);
         buttonSunny = findViewById(R.id.sunny_button);
 
         bottomNavigationView.setOnNavigationItemReselectedListener(navListener);
 
-        if (savedInstanceState == null) {
+       /* if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
-        }
+        }*/
     }
 
     private BottomNavigationView.OnNavigationItemReselectedListener navListener =
@@ -58,11 +58,16 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onNavigationItemReselected(@NonNull MenuItem item) {
                     Fragment fragment = null;
-
+                    Intent intent = null;
                     switch (item.getItemId()) {
                         case R.id.menu_item_user_requests:
-                            fragment = new HomeFragment();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+                            intent = new Intent(getApplicationContext(), HomeFragment.class);
+                            if(intent!=null){
+                                startActivity(intent);
+                            }
+                            //fragment = new HomeFragment();
+                            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                             break;
                         case R.id.menu_item_user_details:
                             fragment = new UserDetailsFragment();
@@ -70,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.menu_item_camera:
 
-                            Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-
+                            intent = new Intent(getApplicationContext(), CameraActivity.class);
                             if (intent != null) {
                                 startActivity(intent);
                             }
@@ -80,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                         default:
                             break;
                     }
-                    //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                 }
             };
 
@@ -92,11 +95,10 @@ public class MainActivity extends AppCompatActivity {
         conditionReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                conditionTextView = findViewById(R.id.textView);
 
                 String text = dataSnapshot.getValue(String.class);
                 Log.d(TAG, "onDataChange: " + text);
-                conditionTextView.setText(text);
+                //conditionTextView.setText(text);
             }
 
             @Override

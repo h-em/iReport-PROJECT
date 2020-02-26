@@ -1,4 +1,4 @@
-package com.android.ireport.activities;
+package com.android.ireport.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -64,7 +64,6 @@ public class CameraActivity extends Activity {
     private CameraCaptureSession cameraCaptureSessions;
     private CaptureRequest.Builder captureRequestBuilder;
     private Size imageDimension;
-    private ImageReader imageReader;
 
     //Save to FILE
     private File file;
@@ -97,11 +96,11 @@ public class CameraActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        textureView = (TextureView) findViewById(R.id.textureView);
+        textureView = findViewById(R.id.textureView);
         //From Java 1.4 , you can use keyword 'assert' to check expression true or false
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        btnCapture = (Button) findViewById(R.id.btnCapture);
+        btnCapture =  findViewById(R.id.btnCapture);
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

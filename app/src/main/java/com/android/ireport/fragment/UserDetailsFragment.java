@@ -1,4 +1,4 @@
-package com.android.ireport.fragments;
+package com.android.ireport.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
