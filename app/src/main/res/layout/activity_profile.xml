@@ -178,6 +178,13 @@
         <!--app:labelVisibilityMode="labeled"-->
 
 
+        <ProgressBar
+            android:id="@+id/profile_progressbar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"/>
+
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
