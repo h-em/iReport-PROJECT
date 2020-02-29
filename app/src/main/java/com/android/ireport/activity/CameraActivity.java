@@ -1,7 +1,6 @@
 package com.android.ireport.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
@@ -21,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
@@ -30,9 +30,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.android.ireport.R;
+import com.android.ireport.utils.BottomNavigationHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,12 +48,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class CameraActivity extends Activity {
+public class CameraActivity extends AppCompatActivity {
+
+    private static final String TAG = "CameraActivity";
+
+    private Context mContext = CameraActivity.this;
+
     private Button btnCapture;
     private TextureView textureView;
 
     //Check state orientation of output image
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -95,6 +104,8 @@ public class CameraActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+
+        //setupBottomNavigationView();
 
         textureView = findViewById(R.id.textureView);
         //From Java 1.4 , you can use keyword 'assert' to check expression true or false
@@ -315,6 +326,7 @@ public class CameraActivity extends Activity {
     @Override
     protected void onPause() {
         stopBackgroundThread();
+        finish();
         super.onPause();
     }
 
@@ -333,5 +345,21 @@ public class CameraActivity extends Activity {
         mBackgroundThread = new HandlerThread("Camera Background");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+
+    //BottomNavigationView setup
+    private void setupBottomNavigationView() {
+        Log.d(TAG, "setupBottomNavigationView: setting bottomNavigationView.");
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        BottomNavigationHelper.enableNavigation(mContext, bottomNavigationView);
+
     }
 }

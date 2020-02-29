@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_item_user_requests"
-        android:icon="@drawable/ic_list_black_24dp"
-        android:title="@string/title_user_request" />
-
-    <item
         android:id="@+id/menu_item_camera"
         android:icon="@drawable/ic_add_black_24dp"
         android:title="@string/title_camera" />
 
     <item
-        android:id="@+id/menu_item_user_details"
+        android:id="@+id/menu_item_user_reports"
+        android:icon="@drawable/ic_list_black_24dp"
+        android:title="@string/title_user_reports" />
+
+    <item
+        android:id="@+id/menu_item_user_profile"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="@string/title_user_details" />
 

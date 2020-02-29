@@ -14,21 +14,15 @@ import com.android.ireport.R;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class UserDetailsFragment extends Fragment {
-    private static final String TAG = "UserDetailsFragment";
+public class CameraFragment extends Fragment {
+    private static final String TAG = "CameraFragment";
 
     View view;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_user_details, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_camera, container, false);
         return view;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 }
