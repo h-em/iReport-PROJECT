@@ -34,8 +34,8 @@
             />
         <activity android:name=".activity.UserProfileActivity"
             android:launchMode="singleTask"
-
             />
+        <activity android:name=".activity.EditProfileActivity"/>
 
     </application>
 
