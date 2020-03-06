@@ -9,23 +9,28 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
+import com.android.ireport.utils.UniversalImageLoader;
 
 public class EditProfileActivity extends AppCompatActivity {
     private static final String TAG = "EditProfileActivity";
 
     private Context mContext;
+    private ImageView mProfilePhoto;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_edit_profile);
+        setContentView(R.layout.activity_edit_profile);
         Log.d(TAG, "onCreate: EditProfileActivity started.");
 
         mContext = EditProfileActivity.this;
+        mProfilePhoto = findViewById(R.id.circleImageView_edit_user_profile);
 
         onPressBackArrow();
+        //set the image
+        setUserProfileImage();
     }
 
-    private void onPressBackArrow(){
+    private void onPressBackArrow() {
 
         ImageView backArrow = findViewById(R.id.back_arrow_icon);
         backArrow.setOnClickListener(new View.OnClickListener() {
@@ -35,5 +40,13 @@ public class EditProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void setUserProfileImage(){
+        Log.d(TAG, "setUserProfileImage: setting profile image.");
+
+        String imageURL = "https://tinyjpg.com/images/social/website.jpg";
+
+        UniversalImageLoader.setImage(imageURL, mProfilePhoto, null, "");
     }
 }

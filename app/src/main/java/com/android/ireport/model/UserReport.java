@@ -13,9 +13,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserReport {
 
+    private String title;
     private String details;
     private Date currentDate;
     private int latitude;
     private int longitude;
+    private int status;
     private User user;
 }
