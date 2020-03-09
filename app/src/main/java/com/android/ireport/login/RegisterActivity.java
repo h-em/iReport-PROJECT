@@ -27,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Random;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -101,10 +103,12 @@ public class RegisterActivity extends AppCompatActivity {
 
                         //check if a username already exists
                         if (mFireBaseHelper.checkIfUsernameAlreadyExists(username, dataSnapshot)) {
-                            randomNumber = mRef.push().getKey().substring(3,10);
+                            Random random = new Random();
+                            for (int i = 0; i < 3; i++) {
+                                username += random.nextInt(10);
+                            }
                             Log.d(TAG, "onDataChange: username already exists so we randomNumber a random at the end of your username");
                         }
-                        username = username + randomNumber;
 
                         //create and add user to the database
                         mFireBaseHelper.addNewUser(username, email, "");
@@ -153,7 +157,8 @@ public class RegisterActivity extends AppCompatActivity {
             Intent intent = new Intent(mContext, MainActivity.class);
             startActivity(intent);
             finish();
-        }else{
+            this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        } else {
             Log.d(TAG, "goToHomeIfUserIsLogged: ");
         }
     }

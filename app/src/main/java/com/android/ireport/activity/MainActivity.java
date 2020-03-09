@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "setupBottomNavigationView: setting bottomNavigationView.");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        BottomNavigationHelper.enableNavigation(mContext, bottomNavigationView);
+        BottomNavigationHelper.enableNavigation(mContext,this, bottomNavigationView);
     }
 
     private void initImageLoader() {
@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(mContext, "User is not logged", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivity(intent);
+            this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 

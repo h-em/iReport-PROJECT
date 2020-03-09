@@ -359,7 +359,7 @@ public class CameraActivity extends AppCompatActivity {
         Log.d(TAG, "setupBottomNavigationView: setting bottomNavigationView.");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        BottomNavigationHelper.enableNavigation(mContext, bottomNavigationView);
+        BottomNavigationHelper.enableNavigation(mContext,this, bottomNavigationView);
 
     }
 }

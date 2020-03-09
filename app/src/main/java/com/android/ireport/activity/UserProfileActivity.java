@@ -54,7 +54,7 @@ public class UserProfileActivity extends AppCompatActivity {
         Log.d(TAG, "setupBottomNavigationView: setting bottomNavigationView.");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        BottomNavigationHelper.enableNavigation(mContext, bottomNavigationView);
+        BottomNavigationHelper.enableNavigation(mContext,this, bottomNavigationView);
     }
 
     private void onEditProfileButtonPress(){
@@ -77,6 +77,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 mAuth.signOut();
                 Intent intent = new Intent(mContext, LoginActivity.class);
                 startActivity(intent);
+                this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }else{
                 Toast.makeText(mContext, "User is still logged.", Toast.LENGTH_SHORT).show();

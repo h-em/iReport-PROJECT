@@ -48,7 +48,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         holder.title.setText(mUserReports.get(position).getTitle());
         //holder.username.setText(mUserReports.get(position).getUser().getUsername());
-        String date = DateConvertor.dateToString(mUserReports.get(position).getCurrentDate());
+        String date = mUserReports.get(position).getCurrentDate();
         holder.date.setText(date);
         String location = mUserReports.get(position).getLatitude() + " " + mUserReports.get(position).getLongitude();
         holder.location.setText(location);
