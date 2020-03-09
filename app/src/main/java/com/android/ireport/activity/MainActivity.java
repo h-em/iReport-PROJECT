@@ -1,15 +1,12 @@
 package com.android.ireport.activity;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -44,14 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
-   /* TextView conditionTextView;
-    Button buttonFoggy;
-    Button buttonSunny;
-    private BottomNavigationView bottomNavigationView;*
 
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference conditionReference = databaseReference.child("condition");
-*/
 
 
     @Override
@@ -69,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setupBottomNavigationView();
         //display recyclerVie
         initRecyclerView();
+
 
         // nu face nimic momentan
         //setupViewPager();
@@ -90,19 +81,18 @@ public class MainActivity extends AppCompatActivity {
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recycleview.");
 
-        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime(),
+        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime().toString(),
                 4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime(),
+        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime().toString(),
                 456422,654564222, 1, new User("ion2","ion@mail2")));
-        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime(),
+        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime().toString(),
                 4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime(),
+        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime().toString(),
                 456422,654564222, 1, new User("ion2","ion@mail2")));
-        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime(),
+        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime().toString(),
                 4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime(),
+        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime().toString(),
                    456422,654564222, 1, new User("ion2","ion@mail2")));
-
 
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -144,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkCurrentUser(FirebaseUser user){
         Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
         if(user == null){
+            Toast.makeText(mContext, "User is not logged", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivity(intent);
         }

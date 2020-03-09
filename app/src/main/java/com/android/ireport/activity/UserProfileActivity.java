@@ -8,13 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
+import com.android.ireport.login.LoginActivity;
 import com.android.ireport.utils.BottomNavigationHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class UserProfileActivity extends AppCompatActivity {
     private static final String TAG = "UserProfileActivity";
@@ -24,6 +27,9 @@ public class UserProfileActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private ImageView mProfilePhoto;
 
+    // Firebase auth
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +37,16 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         Log.d(TAG, "onCreate: started.");
 
+        mAuth = FirebaseAuth.getInstance();
+
         //hide progressBand get ImageView id
         setupWidgets();
         //get image from url and set the profile photo
         setUserProfileImage();
         setupBottomNavigationView();
         onEditProfileButtonPress();
-        //initRecyclerView();
+
+        onLogOutButtonPress();
     }
 
     //BottomNavigationView setup
@@ -63,10 +72,14 @@ public class UserProfileActivity extends AppCompatActivity {
     public void onLogOutButtonPress(){
         Button logOutButton = findViewById(R.id.logout_button);
 
-        logOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //do something
+        logOutButton.setOnClickListener(v -> {
+            if(mAuth.getCurrentUser()!=null) {
+                mAuth.signOut();
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
+                Toast.makeText(mContext, "User is still logged.", Toast.LENGTH_SHORT).show();
             }
         });
     }

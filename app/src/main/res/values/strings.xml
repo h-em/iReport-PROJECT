@@ -3,4 +3,8 @@
     <string name="title_user_reports">Reports</string>
     <string name="title_camera">Camera</string>
     <string name="title_user_details">Profile</string>
+
+    <string name="users_node_name">users</string>
+    <string name="users_account_node_name">users_account </string>
+
 </resources>

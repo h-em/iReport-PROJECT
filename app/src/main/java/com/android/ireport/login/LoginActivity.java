@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,16 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
 import com.android.ireport.activity.MainActivity;
 import com.android.ireport.utils.Utils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -41,33 +36,38 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPassword;
     private TextView mPleaseWait;
     private TextView registerLink;
+    private Button mLoginButton;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Log.d(TAG, "onCreate: started.");
 
+        mContext = LoginActivity.this;
         mEmail = findViewById(R.id.input_email_login);
         mPassword = findViewById(R.id.input_password_login);
         mProgressBar = findViewById(R.id.progressBar_login);
         mPleaseWait = findViewById(R.id.pleaseWait_login);
-        mContext = LoginActivity.this;
-        Log.d(TAG, "onCreate: started.");
+        mLoginButton = findViewById(R.id.login_button);
+        registerLink = findViewById(R.id.link_signUp);
 
         mPleaseWait.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
 
-        registerLink = findViewById(R.id.link_signUp);
 
-        registerLink.setOnEditorActionListener((v, actionId, event) -> {
+     /*   registerLink.setOnEditorActionListener((v, actionId, event) -> {
             Intent intent = new Intent(mContext, RegisterActivity.class);
             startActivity(intent);
             return false;
-        });
+        });*/
 
         setupFirebaseAuth();
-        init();
+
+
+        onClickLoginButton();
+        onClickRegistrationLink();
 
     }
 
@@ -83,6 +83,8 @@ public class LoginActivity extends AppCompatActivity {
             if (user != null) {
                 // User is signed in
                 Log.d(TAG, "onAuthStateChanged: signed_in:" + user.getUid());
+                // if the user is logged in, than navigate to MainActivity.class
+                goToHomeIfUserIsLogged();
             } else {
                 // User is signed out
                 Log.d(TAG, "onAuthStateChanged: signed_out");
@@ -91,11 +93,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private void init() {
+    private void onClickLoginButton() {
 
-        Button loginButton = findViewById(R.id.login_button);
-
-        loginButton.setOnClickListener(v -> {
+        mLoginButton.setOnClickListener(v -> {
             String email = mEmail.getText().toString();
             String password = mPassword.getText().toString();
 
@@ -110,9 +110,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        onClickRegistrationLink();
-        // if the user is logged in than navigate to MainActivity.class
-        goToHomeIfUserIsLogged();
+
+
     }
 
 
@@ -144,6 +143,8 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(mContext, MainActivity.class);
             startActivity(intent);
             finish();
+        }else{
+            Log.d(TAG, "goToHomeIfUserIsLogged: ");
         }
     }
 
