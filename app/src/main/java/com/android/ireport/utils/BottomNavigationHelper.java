@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import com.android.ireport.R;
 import com.android.ireport.activity.CameraActivity;
 import com.android.ireport.activity.MainActivity;
-import com.android.ireport.activity.UserProfileActivity;
+import com.android.ireport.activity.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class BottomNavigationHelper {
@@ -32,7 +32,7 @@ public class BottomNavigationHelper {
                         callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;
                     case R.id.menu_item_user_profile:
-                        Intent userProfileIntent = new Intent(context, UserProfileActivity.class);
+                        Intent userProfileIntent = new Intent(context, ProfileActivity.class);
                         context.startActivity(userProfileIntent);
                         callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;

@@ -7,13 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserReport {
+public class Report {
 
-    private String title;
+    private String current_date;
     private String details;
-    private String currentDate;
     private int latitude;
     private int longitude;
-    private int status;
-    private User user;
+    private String status;
+    private String title;
 }

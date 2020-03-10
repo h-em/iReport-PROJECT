@@ -9,26 +9,24 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.ireport.R;
 import com.android.ireport.fragment.EditReportFragment;
-import com.android.ireport.model.UserReport;
-import com.android.ireport.utils.DateConvertor;
+import com.android.ireport.model.Report;
 
 import java.util.List;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
     private static final String TAG = "RecycleViewAdapter";
 
-    private List<UserReport> mUserReports;
+    private List<Report> mUserReports;
     private Context mContext;
     private FragmentManager mFragmentManager;
 
 
-    public RecycleViewAdapter(List<UserReport> mUserReports, Context mContext, FragmentManager fragmentManager) {
+    public RecycleViewAdapter(List<Report> mUserReports, Context mContext, FragmentManager fragmentManager) {
         this.mUserReports = mUserReports;
         this.mContext = mContext;
         this.mFragmentManager = fragmentManager;
@@ -48,7 +46,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         holder.title.setText(mUserReports.get(position).getTitle());
         //holder.username.setText(mUserReports.get(position).getUser().getUsername());
-        String date = mUserReports.get(position).getCurrentDate();
+        String date = mUserReports.get(position).getCurrent_date();
         holder.date.setText(date);
         String location = mUserReports.get(position).getLatitude() + " " + mUserReports.get(position).getLongitude();
         holder.location.setText(location);
@@ -57,7 +55,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: clicked on: " + mUserReports.get(position).getUser().getUsername());
 
                 mFragmentManager.beginTransaction().replace(R.id.fragment_container, new EditReportFragment()).commit();
             }

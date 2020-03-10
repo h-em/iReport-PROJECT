@@ -6,12 +6,16 @@ import android.widget.Toast;
 
 import com.android.ireport.R;
 import com.android.ireport.model.User;
+import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
+import com.android.ireport.model.Report;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class FireBaseHelper {
     private static final String TAG = "FireBaseHelper";
@@ -42,6 +46,7 @@ public class FireBaseHelper {
 
                     } else {
                         // If sign in fails, display a message to the user.
+
                         Log.w(TAG, "registerUser: failure.", task.getException());
                         Toast.makeText(mContext, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
@@ -90,4 +95,123 @@ public class FireBaseHelper {
 
         Log.d(TAG, "addNewUser: new UserExtras added.");
     }
+
+
+    public UserData getUserData(DataSnapshot dataSnapshot) {
+        Log.d(TAG, "getUserData: get data from db.");
+
+        Report report = new Report();
+        User user = new User();
+        UserExtras userExtras = new UserExtras();
+
+
+        if (mAuth.getCurrentUser() != null) {
+            userId = mAuth.getCurrentUser().getUid();
+        }
+
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+            //for Reports node
+            if (ds.getKey().equals("reports")) {
+                Log.d(TAG, "getUserData: dataSnapshot: " + ds);
+
+                try {
+                    report.setCurrent_date(ds.child(userId).getValue(Report.class).getCurrent_date());
+                    report.setDetails(ds.child(userId).getValue(Report.class).getDetails());
+                    report.setLatitude(ds.child(userId).getValue(Report.class).getLatitude());
+                    report.setLongitude(ds.child(userId).getValue(Report.class).getLongitude());
+                    report.setStatus(ds.child(userId).getValue(Report.class).getStatus());
+                    report.setTitle(ds.child(userId).getValue(Report.class).getTitle());
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getReportData: NullPointerException:  " + e.getMessage());
+                }
+            }
+
+            //for users node
+            if (ds.getKey().equals("users")) {
+                Log.d(TAG, "getUser: dataSnapshot: " + ds);
+
+                try {
+                    user.setEmail(ds.child(userId).getValue(User.class).getEmail());
+                    user.setUsername(ds.child(userId).getValue(User.class).getUsername());
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getUserData: NullPointerException:  " + e.getMessage());
+                }
+            }
+
+            //for users_account node
+            if (ds.getKey().equals("users_account")) {
+                Log.d(TAG, "getUserExtras: dataSnapshot: " + ds);
+
+                try {
+                    userExtras.setProfile_photo(ds.child(userId).getValue(UserExtras.class).getProfile_photo());
+                    userExtras.setReports_nr(ds.child(userId).getValue(UserExtras.class).getReports_nr());
+                    userExtras.setResolved_reports_nr(ds.child(userId).getValue(UserExtras.class).getResolved_reports_nr());
+                } catch (NullPointerException e) {
+                    Log.e(TAG, "getUserData: NullPointerException:  " + e.getMessage());
+                }
+            }
+        }
+        return new UserData(user, userExtras, report);
+    }
+
+
+    public User getUser(DataSnapshot dataSnapshot, String userId) {
+
+        User user = new User();
+        try {
+            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+                if (ds.getKey().equals("users")) {
+                    Log.d(TAG, "getUser: user: " + dataSnapshot);
+
+                    user = ds.child(userId).getValue(User.class);
+                }
+            }
+        } catch (NullPointerException e) {
+            Log.e(TAG, "getReports: " + e.getMessage());
+        }
+
+        return user;
+    }
+
+    public UserExtras getUserExtras(DataSnapshot dataSnapshot, String userId) {
+
+        UserExtras userExtras = new UserExtras();
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+
+            try {
+                if (ds.getKey().equals("users_account")) {
+                    Log.d(TAG, "getUserExtras: userExtras: " + dataSnapshot);
+
+                    userExtras = ds.child(userId).getValue(UserExtras.class);
+                }
+            } catch (NullPointerException e) {
+                Log.e(TAG, "getReports: " + e.getMessage());
+            }
+        }
+
+        return userExtras;
+    }
+
+    public List<Report> getReports(DataSnapshot dataSnapshot, String userId) {
+
+        List<Report> reports = new ArrayList<>();
+
+        for (DataSnapshot ds : dataSnapshot.child("reports").getChildren()) {
+
+            try {
+                if (ds.getKey().equals(userId)) {
+                    Log.d(TAG, "getUser: user: " + dataSnapshot);
+
+                    reports.add(ds.child(userId).getValue(Report.class));
+                }
+            } catch (NullPointerException e) {
+                Log.e(TAG, "getReports: " + e.getMessage());
+            }
+        }
+
+        return reports;
+    }
+
 }

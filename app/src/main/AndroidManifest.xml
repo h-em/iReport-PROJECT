@@ -30,7 +30,7 @@
         <activity android:name=".activity.CameraActivity"
             android:launchMode="singleTask"
             />
-        <activity android:name=".activity.UserProfileActivity"
+        <activity android:name=".activity.ProfileActivity"
             android:launchMode="singleTask"
             />
         <activity android:name=".activity.EditProfileActivity"/>

@@ -2,6 +2,7 @@ package com.android.ireport.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.ireport.R;
 import com.android.ireport.activity.MainActivity;
 import com.android.ireport.utils.Utils;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 
@@ -46,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: started.");
 
         mContext = LoginActivity.this;
+
         mEmail = findViewById(R.id.input_email_login);
         mPassword = findViewById(R.id.input_password_login);
         mProgressBar = findViewById(R.id.progressBar_login);
@@ -57,14 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
 
 
-     /*   registerLink.setOnEditorActionListener((v, actionId, event) -> {
-            Intent intent = new Intent(mContext, RegisterActivity.class);
-            startActivity(intent);
-            return false;
-        });*/
-
         setupFirebaseAuth();
-
 
         onClickLoginButton();
         onClickRegistrationLink();
@@ -123,13 +121,11 @@ public class LoginActivity extends AppCompatActivity {
                         Log.d(TAG, "singInExistingUser: success");
                         Toast.makeText(mContext, "Authentication success.", Toast.LENGTH_SHORT).show();
 
-                        FirebaseUser user = mAuth.getCurrentUser();
-
                     } else {
+
                         // If sign in fails, display a message to the user.
                         Log.d(TAG, "singInExistingUser: failure", task.getException());
                         Toast.makeText(mContext, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                        //updateUI(null);
                     }
 
                     mProgressBar.setVisibility(View.GONE);

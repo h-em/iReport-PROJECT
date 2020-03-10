@@ -36,7 +36,7 @@ public class EditProfileActivity extends AppCompatActivity {
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: navigating back to UserProfileActivity");
+                Log.d(TAG, "onClick: navigating back to ProfileActivity");
                 finish();
             }
         });
@@ -48,5 +48,9 @@ public class EditProfileActivity extends AppCompatActivity {
         String imageURL = "https://tinyjpg.com/images/social/website.jpg";
 
         UniversalImageLoader.setImage(imageURL, mProfilePhoto, null, "");
+    }
+
+    public void setUserExtars(){
+
     }
 }

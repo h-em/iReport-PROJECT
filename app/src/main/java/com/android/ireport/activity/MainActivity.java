@@ -17,7 +17,7 @@ import com.android.ireport.adapter.SectionPagerAdapter;
 import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.login.LoginActivity;
 import com.android.ireport.model.User;
-import com.android.ireport.model.UserReport;
+import com.android.ireport.model.Report;
 import com.android.ireport.utils.BottomNavigationHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private Context mContext = MainActivity.this;
-    private List<UserReport> userReports = new ArrayList<>();
+    private List<Report> userReports = new ArrayList<>();
 
     // Firebase auth
     private FirebaseAuth mAuth;
@@ -80,20 +80,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recycleview.");
-
-        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime().toString(),
+/*
+        userReports.add(new Report("title","details", Calendar.getInstance().getTime().toString(),
                 4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime().toString(),
+        userReports.add(new Report("title","details2",Calendar.getInstance().getTime().toString(),
                 456422,654564222, 1, new User("ion2","ion@mail2")));
-        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime().toString(),
+        userReports.add(new Report("title","details", Calendar.getInstance().getTime().toString(),
                 4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime().toString(),
+        userReports.add(new Report("title","details2",Calendar.getInstance().getTime().toString(),
                 456422,654564222, 1, new User("ion2","ion@mail2")));
-        userReports.add(new UserReport("title","details", Calendar.getInstance().getTime().toString(),
+        userReports.add(new Report("title","details", Calendar.getInstance().getTime().toString(),
                 4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new UserReport("title","details2",Calendar.getInstance().getTime().toString(),
+        userReports.add(new Report("title","details2",Calendar.getInstance().getTime().toString(),
                    456422,654564222, 1, new User("ion2","ion@mail2")));
-
+*/
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         RecycleViewAdapter adapter = new RecycleViewAdapter(userReports, mContext, getSupportFragmentManager());
@@ -110,6 +110,16 @@ public class MainActivity extends AppCompatActivity {
         ////ca sa mearga viewPager2 tre sa am o clasa care implementez Adapter si apoi setez adapterul in viewPager2
     }
 
+
+    private void checkCurrentUser(FirebaseUser user){
+        Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
+        if(user == null){
+            Toast.makeText(mContext, "User is not logged", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            startActivity(intent);
+            this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
+    }
 
     private void firebaseAuthSetup(){
         Log.d(TAG, "firebaseAuthSetup: setting up firebase auth.");
@@ -131,20 +141,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void checkCurrentUser(FirebaseUser user){
-        Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
-        if(user == null){
-            Toast.makeText(mContext, "User is not logged", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(mContext, LoginActivity.class);
-            startActivity(intent);
-            this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        }
+    public void setReportDetails(){
+
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthStateListener);
+        checkCurrentUser(mAuth.getCurrentUser());
+
     }
 
     @Override

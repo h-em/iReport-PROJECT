@@ -44,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
 
     private String email, username, password;
-    private String randomNumber;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -52,7 +51,6 @@ public class RegisterActivity extends AppCompatActivity {
     private FireBaseHelper mFireBaseHelper;
 
     //private FirebaseMethods firebaseMethods;
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mRef;
 
 
