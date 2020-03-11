@@ -34,7 +34,7 @@ public class PhotoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_photo, container, false);
+     /*   View view = inflater.inflate(R.layout.fragment_photo, container, false);
         Log.d(TAG, "onCreateView: started.");
 
         Button btnLaunchCamera = (Button) view.findViewById(R.id.btnLaunchCamera);
@@ -66,13 +66,14 @@ public class PhotoFragment extends Fragment {
         }
         else{
             return false;
-        }
+        }*/
+        return null;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+/*
         if(requestCode == CAMERA_REQUEST_CODE){
             Log.d(TAG, "onActivityResult: done taking a photo.");
             Log.d(TAG, "onActivityResult: attempting to navigate to final share screen.");
@@ -102,7 +103,7 @@ public class PhotoFragment extends Fragment {
                }
             }
 
-        }
+        }*/
     }
 }
 

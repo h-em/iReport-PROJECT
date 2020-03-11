@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -53,7 +54,7 @@ public class NextActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+     /*   super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
         mCaption = (EditText) findViewById(R.id.caption) ;
@@ -93,7 +94,7 @@ public class NextActivity extends AppCompatActivity {
             }
         });
 
-        setImage();
+        setImage();*/
     }
 
     private void someMethod(){
@@ -116,10 +117,8 @@ public class NextActivity extends AppCompatActivity {
 
     }
 
+/*
 
-    /**
-     * gets the image url from the incoming intent and displays the chosen image
-     */
     private void setImage(){
         intent = getIntent();
         ImageView image = (ImageView) findViewById(R.id.imageShare);
@@ -136,13 +135,8 @@ public class NextActivity extends AppCompatActivity {
         }
     }
 
-     /*
-     ------------------------------------ Firebase ---------------------------------------------
-     */
 
-    /**
-     * Setup the firebase auth object
-     */
+
     private void setupFirebaseAuth(){
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
         mAuth = FirebaseAuth.getInstance();
@@ -183,7 +177,7 @@ public class NextActivity extends AppCompatActivity {
             }
         });
     }
-
+*/
 
     @Override
     public void onStart() {

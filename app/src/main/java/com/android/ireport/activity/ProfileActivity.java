@@ -95,6 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, EditProfileActivity.class);
+                intent.putExtra("username",mUsername.getText().toString());
                 startActivity(intent);
             }
         });
@@ -145,7 +146,12 @@ public class ProfileActivity extends AppCompatActivity {
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //get user  info from db
+                UserData userData = mFirebaseHelper.getUserData(dataSnapshot);
 
+                //get image for user
+                //set user profile
+                setProfileDetails(userData);
             }
 
             @Override
