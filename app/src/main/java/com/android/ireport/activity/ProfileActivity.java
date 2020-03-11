@@ -146,12 +146,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                //get user  info from db
-               UserData userData = mFirebaseHelper.getUserData(dataSnapshot);
-
-                //get image for user
-                //set user profile
-                setProfileDetails(userData);
             }
 
             @Override

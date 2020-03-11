@@ -2,11 +2,13 @@ package com.android.ireport.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -16,9 +18,9 @@ import com.android.ireport.adapter.RecycleViewAdapter;
 import com.android.ireport.adapter.SectionPagerAdapter;
 import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.login.LoginActivity;
-import com.android.ireport.model.User;
 import com.android.ireport.model.Report;
 import com.android.ireport.utils.BottomNavigationHelper;
+import com.android.ireport.utils.Permission;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +28,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     // Firebase auth
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    public static final int VERIFY_PERMIMSSION_REQUEST = 1;
 
 
 
@@ -61,8 +64,49 @@ public class MainActivity extends AppCompatActivity {
         initRecyclerView();
 
 
-        // nu face nimic momentan
-        //setupViewPager();
+        if(checkPermissionArray(Permission.PERMISSIONS)){
+
+        }else{
+            verifyPermission(Permission.PERMISSIONS);
+        }
+
+    }
+
+
+
+    private boolean checkPermissionArray(String[] permission) {
+
+        for (int i = 0; i < permission.length; i++) {
+            String check = permission[i];
+            if(!checkPermissions(check)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private boolean checkPermissions(String permission) {
+        Log.d(TAG, "checkPermissions: checking permission");
+
+        int permissionRequest = ActivityCompat.checkSelfPermission(mContext, permission);
+
+        if(permissionRequest != PackageManager.PERMISSION_GRANTED){
+            Log.d(TAG, "checkPermissions:  permission was NOT granted for " + permission);
+            return false;
+        }else{
+            Log.d(TAG, "checkPermissions:  permission was granted for " + permission);
+
+            return true;
+        }
+    }
+
+    public void verifyPermission(String[] permissions){
+        ActivityCompat.requestPermissions(
+                MainActivity.this,
+                permissions,
+                VERIFY_PERMIMSSION_REQUEST
+        );
     }
 
     private void setupBottomNavigationView() {
@@ -140,12 +184,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    public void setReportDetails(){
-
-
-
-    }
 
     @Override
     protected void onStart() {

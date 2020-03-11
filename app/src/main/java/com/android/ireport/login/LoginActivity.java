@@ -2,7 +2,6 @@ package com.android.ireport.login;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,10 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.ireport.R;
 import com.android.ireport.activity.MainActivity;
 import com.android.ireport.utils.Utils;
-import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 
 

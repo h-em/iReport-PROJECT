@@ -214,4 +214,7 @@ public class FireBaseHelper {
         return reports;
     }
 
+    public void updateUsername(String username) {
+
+    }
 }
