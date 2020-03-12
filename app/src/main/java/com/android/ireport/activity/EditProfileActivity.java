@@ -109,6 +109,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         Toast.makeText(mContext, "username saved", Toast.LENGTH_SHORT).show();
 
+
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {

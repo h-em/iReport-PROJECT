@@ -4,18 +4,26 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.ireport.R;
 import com.android.ireport.model.User;
 import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
 import com.android.ireport.model.Report;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FireBaseHelper {
     private static final String TAG = "FireBaseHelper";
@@ -215,6 +223,15 @@ public class FireBaseHelper {
     }
 
     public void updateUsername(String username) {
+
+        if (mAuth.getCurrentUser() != null) {
+            userId = mAuth.getCurrentUser().getUid();
+        }
+
+        mReference = FirebaseDatabase.getInstance().getReference();
+        Map<String, Object> map = new HashMap();
+        map.put("username",username);
+        mReference.child("users").child(userId).updateChildren(map);
 
     }
 
