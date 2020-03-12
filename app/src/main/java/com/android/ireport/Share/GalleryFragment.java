@@ -1,20 +1,15 @@
 package com.android.ireport.Share;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -54,7 +49,8 @@ public class GalleryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       /* View view = inflater.inflate(R.layout.fragment_gallery, container, false);
+        View view = inflater.inflate(R.layout.fragment_gallery, container, false);
+        /*
         galleryImage = (ImageView) view.findViewById(R.id.galleryImageView);
         gridView = (GridView) view.findViewById(R.id.gridView);
         directorySpinner = (Spinner) view.findViewById(R.id.spinnerDirectory);
@@ -94,9 +90,9 @@ public class GalleryFragment extends Fragment {
             }
         });
 
-        init();
-*/
-        return null;
+        init();*/
+
+        return view;
     }
 
     private boolean isRootTask(){

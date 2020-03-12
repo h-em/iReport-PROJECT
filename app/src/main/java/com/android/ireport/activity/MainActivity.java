@@ -20,7 +20,7 @@ import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.login.LoginActivity;
 import com.android.ireport.model.Report;
 import com.android.ireport.utils.BottomNavigationHelper;
-import com.android.ireport.utils.Permission;
+import com.android.ireport.utils.Permissions;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
         initRecyclerView();
 
 
-        if(checkPermissionArray(Permission.PERMISSIONS)){
+        if(checkPermissionArray(Permissions.PERMISSIONS)){
 
         }else{
-            verifyPermission(Permission.PERMISSIONS);
+            verifyPermission(Permissions.PERMISSIONS);
         }
 
     }

@@ -1,32 +1,38 @@
 package com.android.ireport.Share;
 
-import android.view.View;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.PagerAdapter;
+import androidx.fragment.app.FragmentPagerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-class SectionsPagerAdapter extends PagerAdapter {
+class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+    private static final String TAG = "SectionsPagerAdapter";
+
+    private final List<Fragment> mFragmentList = new ArrayList<>();
 
 
-    private FragmentManager mFragmentManager;
-    public SectionsPagerAdapter(FragmentManager fragment){
-        mFragmentManager = fragment;
+    public SectionsPagerAdapter(FragmentManager fm) {
+        super(fm);
     }
+
+    @Override
+    public Fragment getItem(int position) {
+        return mFragmentList.get(position);
+    }
+
 
     @Override
     public int getCount() {
-        return 0;
+        return mFragmentList.size();
     }
 
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return false;
+    public void addFragment(Fragment fragment){
+        mFragmentList.add(fragment);
     }
 
-    public void addFragment(Fragment galleryFragment) {
-    }
 
 }

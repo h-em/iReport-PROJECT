@@ -54,8 +54,8 @@ public class NextActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-     /*   super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_next);
+        super.onCreate(savedInstanceState);
+      /*  setContentView(R.layout.activity_next);
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
         mCaption = (EditText) findViewById(R.id.caption) ;
 

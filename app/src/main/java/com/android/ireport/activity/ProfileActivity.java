@@ -175,6 +175,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+
+    public void setNumber(int number){
+
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
