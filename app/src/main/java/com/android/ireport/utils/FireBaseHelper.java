@@ -228,13 +228,14 @@ public class FireBaseHelper {
             userId = mAuth.getCurrentUser().getUid();
         }
 
-        mReference = FirebaseDatabase.getInstance().getReference();
-        Map<String, Object> map = new HashMap();
-        map.put("username",username);
-        mReference.child("users").child(userId).updateChildren(map);
-
+        if (username != null) {
+            mReference.child("users").child(userId).child("username").setValue(username);
+            Toast.makeText(mContext, "username updated", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(mContext, "username is null", Toast.LENGTH_SHORT).show();
+        }
     }
-
 
 
 }
