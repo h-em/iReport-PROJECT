@@ -38,7 +38,9 @@
         <activity android:name=".activity.EditProfileActivity"/>
         <activity android:name=".login.LoginActivity"/>
         <activity android:name=".login.RegisterActivity"/>
-        <activity android:name=".Share.NextActivity"/>
+        <activity android:name=".Share.NextActivity"
+            android:windowSoftInputMode="adjustPan"
+        />
 
 
     </application>

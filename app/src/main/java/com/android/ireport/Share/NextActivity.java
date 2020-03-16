@@ -38,8 +38,7 @@ public class NextActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     private FireBaseHelper mFirebaseHelper;
 
-    //widgets
-    private EditText mCaption;
+    private EditText mDetails;
 
     //vars
     private String mAppend = "file:/";
@@ -53,7 +52,7 @@ public class NextActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
-        //mCaption = findViewById(R.id.caption) ;
+        mDetails = findViewById(R.id.report_details_next_activity);
 
         setupFirebaseAuth();
 
@@ -74,12 +73,13 @@ public class NextActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: navigating to the final share screen.");
                 //upload the image to firebase
                 Toast.makeText(NextActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
-                String caption = mCaption.getText().toString();
-/*
-                if(intent.hasExtra(getString(R.string.selected_image))){
-                    imgUrl = intent.getStringExtra(getString(R.string.selected_image));
-                    mFirebaseHelper.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgUrl,null);
+                String reportDescription = mDetails.getText().toString();
+
+                if (intent.hasExtra("selected_image")) {
+                    imgUrl = intent.getStringExtra("selected_image");
+                    mFirebaseHelper.uploadNewPhoto("new_photo", reportDescription, imageCount, imgUrl, null);
                 }
+                /*
                 else if(intent.hasExtra(getString(R.string.selected_bitmap))){
                     bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
                     mFirebaseHelper.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
@@ -93,7 +93,7 @@ public class NextActivity extends AppCompatActivity {
         setImage();
     }
 
-    private void someMethod(){
+    private void someMethod() {
         /*
             Step 1)
             Create a data model for Photos
@@ -114,12 +114,11 @@ public class NextActivity extends AppCompatActivity {
     }
 
 
-
-    private void setImage(){
+    private void setImage() {
         intent = getIntent();
         ImageView image = findViewById(R.id.image_taken);
 
-        if(intent.hasExtra("selected_image")){
+        if (intent.hasExtra("selected_image")) {
             imgUrl = intent.getStringExtra("selected_image");
             Log.d(TAG, "setImage: got new image url: " + imgUrl);
             UniversalImageLoader.setImage(imgUrl, image, null, mAppend);
@@ -133,8 +132,7 @@ public class NextActivity extends AppCompatActivity {
     }
 
 
-
-    private void setupFirebaseAuth(){
+    private void setupFirebaseAuth() {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
