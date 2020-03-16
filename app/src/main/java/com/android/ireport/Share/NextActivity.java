@@ -27,10 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-/**
- * Created by User on 7/24/2017.
- */
-
 public class NextActivity extends AppCompatActivity {
 
     private static final String TAG = "NextActivity";
@@ -55,13 +51,13 @@ public class NextActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      /*  setContentView(R.layout.activity_next);
+        setContentView(R.layout.activity_next);
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
-        mCaption = (EditText) findViewById(R.id.caption) ;
+        //mCaption = findViewById(R.id.caption) ;
 
         setupFirebaseAuth();
 
-        ImageView backArrow = (ImageView) findViewById(R.id.ivBackArrow);
+        ImageView backArrow = findViewById(R.id.back_arrow_icon_from_next_activity);
         backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,15 +67,15 @@ public class NextActivity extends AppCompatActivity {
         });
 
 
-        TextView share = (TextView) findViewById(R.id.tvShare);
-        share.setOnClickListener(new View.OnClickListener() {
+        TextView send = findViewById(R.id.send_textView);
+        send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to the final share screen.");
                 //upload the image to firebase
                 Toast.makeText(NextActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
                 String caption = mCaption.getText().toString();
-
+/*
                 if(intent.hasExtra(getString(R.string.selected_image))){
                     imgUrl = intent.getStringExtra(getString(R.string.selected_image));
                     mFirebaseHelper.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, imgUrl,null);
@@ -88,13 +84,13 @@ public class NextActivity extends AppCompatActivity {
                     bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
                     mFirebaseHelper.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
                 }
-
+*/
 
 
             }
         });
 
-        setImage();*/
+        setImage();
     }
 
     private void someMethod(){
@@ -117,22 +113,23 @@ public class NextActivity extends AppCompatActivity {
 
     }
 
-/*
+
 
     private void setImage(){
         intent = getIntent();
-        ImageView image = (ImageView) findViewById(R.id.imageShare);
+        ImageView image = findViewById(R.id.image_taken);
 
-        if(intent.hasExtra(getString(R.string.selected_image))){
-            imgUrl = intent.getStringExtra(getString(R.string.selected_image));
+        if(intent.hasExtra("selected_image")){
+            imgUrl = intent.getStringExtra("selected_image");
             Log.d(TAG, "setImage: got new image url: " + imgUrl);
             UniversalImageLoader.setImage(imgUrl, image, null, mAppend);
         }
+        /*
         else if(intent.hasExtra(getString(R.string.selected_bitmap))){
             bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
             Log.d(TAG, "setImage: got new bitmap");
             image.setImageBitmap(bitmap);
-        }
+        }*/
     }
 
 
@@ -149,7 +146,6 @@ public class NextActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
 
-
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
@@ -157,7 +153,6 @@ public class NextActivity extends AppCompatActivity {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
 
@@ -166,7 +161,7 @@ public class NextActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                imageCount = mFirebaseHelper.getImageCount(dataSnapshot);
+                imageCount = mFirebaseHelper.getNumberOfUserReports(dataSnapshot);
                 Log.d(TAG, "onDataChange: image count: " + imageCount);
 
             }
@@ -177,7 +172,7 @@ public class NextActivity extends AppCompatActivity {
             }
         });
     }
-*/
+
 
     @Override
     public void onStart() {

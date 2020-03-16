@@ -28,6 +28,8 @@ public class PhotoFragment extends Fragment {
     private static final int GALLERY_FRAGMENT_NUM = 2;
     private static final int  CAMERA_REQUEST_CODE = 5;
 
+    private Button mLauncherCameraButton;
+
 
     @Nullable
     @Override
@@ -35,42 +37,22 @@ public class PhotoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_photo, container, false);
         Log.d(TAG, "onCreateView: started.");
 
-        Button btnLaunchCamera = (Button) view.findViewById(R.id.button_launch_camera);
-        btnLaunchCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: launching camera.");
+        //camera button press
+        mLauncherCameraButton =  view.findViewById(R.id.button_launch_camera);
+        onClickLauncherCameraButton();
 
-                if(((ShareActivity)getActivity()).getCurrentTabNumber() == PHOTO_FRAGMENT_NUM){
-                    if(((ShareActivity)getActivity()).checkPermissions(Permissions.PERMISSIONS[0])){
-                        Log.d(TAG, "onClick: starting camera");
-                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-                    }else{
-                        Intent intent = new Intent(getActivity(), ShareActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
-                }
-            }
-        });
+
         return view;
     }
 
-    private boolean isRootTask(){
-        if(((ShareActivity)getActivity()).getTask() == 0) {
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == CAMERA_REQUEST_CODE){
-            Log.d(TAG, "onActivityResult: done taking a photo.");
-            Log.d(TAG, "onActivityResult: attempting to navigate to final share screen.");
+            Log.d(TAG, "onActivityResult: photo was made.");
+            Log.d(TAG, "onActivityResult: try to navigate to the next screen.");
 
             Bitmap bitmap;
             bitmap = (Bitmap) data.getExtras().get("data");
@@ -98,6 +80,36 @@ public class PhotoFragment extends Fragment {
             }
 */
         }
+    }
+
+    private void onClickLauncherCameraButton(){
+        mLauncherCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: launching camera.");
+
+                if(((ShareActivity)getActivity()).getCurrentTabNumber() == PHOTO_FRAGMENT_NUM){
+                    if(((ShareActivity)getActivity()).checkPermissions(Permissions.CAMERA_PERMISSION[0])){
+                        Log.d(TAG, "onClick: starting camera");
+                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                    }else{
+                        Intent intent = new Intent(getActivity(), ShareActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
+
+    }
+
+
+    private boolean isRootTask(){
+        if(((ShareActivity)getActivity()).getTask() == 0) {
+            return true;
+        }
+        return false;
     }
 }
 

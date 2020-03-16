@@ -119,6 +119,11 @@ public class FireBaseHelper {
 
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
+
+            //TODO
+            //get somehow the report obj from db
+
+          /*
             //for Reports node
             if (ds.getKey().equals("reports")) {
                 Log.d(TAG, "getUserData: dataSnapshot: " + ds);
@@ -134,6 +139,7 @@ public class FireBaseHelper {
                     Log.e(TAG, "getReportData: NullPointerException:  " + e.getMessage());
                 }
             }
+         */
 
             //for users node
             if (ds.getKey().equals("users")) {
@@ -202,11 +208,9 @@ public class FireBaseHelper {
         return userExtras;
     }
 
-    public List<Report> getReports(DataSnapshot dataSnapshot, String userId) {
+    public Report getReport(DataSnapshot dataSnapshot, String userId) {
 
-        List<Report> reports = new ArrayList<>();
-
-        for (DataSnapshot ds : dataSnapshot.child("reports").getChildren()) {
+       /* for (DataSnapshot ds : dataSnapshot.child("reports").getChildren()) {
 
             try {
                 if (ds.getKey().equals(userId)) {
@@ -219,7 +223,8 @@ public class FireBaseHelper {
             }
         }
 
-        return reports;
+        return reports;*/
+       return null;
     }
 
     public void updateUsername(String username) {
@@ -237,5 +242,41 @@ public class FireBaseHelper {
         }
     }
 
+
+    public int getNumberOfUserReports(DataSnapshot dataSnapshot){
+        int count = 0;
+        for(DataSnapshot ds : dataSnapshot
+                .child("user_reports")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()){
+            count++;
+        }
+        return count;
+    }
+
+
+
+    public int getResolvedReports(DataSnapshot dataSnapshot, String status){
+        int count = 0;
+        for(DataSnapshot ds : dataSnapshot
+                .child("user_reports")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()){
+
+            // 1. get each Report per user
+            // 2. check the status
+            // 3. then count the number og photos
+
+            /*
+                if(ds.getKey().equals("status")){
+
+                    if(ds.getValue())
+
+
+                }
+            */
+            count++;
+        }
+
+        return count;
+    }
 
 }
