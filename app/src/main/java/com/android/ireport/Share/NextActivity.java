@@ -1,7 +1,12 @@
 package com.android.ireport.Share;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -17,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
 import com.android.ireport.utils.FireBaseHelper;
+import com.android.ireport.utils.MyLocationListener;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +37,7 @@ public class NextActivity extends AppCompatActivity {
 
     private static final String TAG = "NextActivity";
 
+
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -39,6 +46,13 @@ public class NextActivity extends AppCompatActivity {
     private FireBaseHelper mFirebaseHelper;
 
     private EditText mDetails;
+    private Context mContext;
+
+
+    // location
+    LocationManager mLocationManager;
+    LocationListener mLocationListener;
+
 
     //vars
     private String mAppend = "file:/";
@@ -51,8 +65,24 @@ public class NextActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
+        mContext = NextActivity.this;
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
         mDetails = findViewById(R.id.report_details_next_activity);
+
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationListener = new MyLocationListener(mContext);
+
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, mLocationListener);
 
         setupFirebaseAuth();
 
@@ -77,12 +107,18 @@ public class NextActivity extends AppCompatActivity {
 
                 if (intent.hasExtra("selected_image")) {
                     imgUrl = intent.getStringExtra("selected_image");
-                    mFirebaseHelper.uploadNewPhoto("new_photo", reportDescription, imageCount, imgUrl, null);
+
+                    //latitude and longitude
+                    //details
+                    //
+
+                    String latitude =
+                    mFirebaseHelper.uploadNewReportAndPhoto("new_photo", reportDescription, imageCount, imgUrl, null, latitude, longitude);
                 }
                 /*
                 else if(intent.hasExtra(getString(R.string.selected_bitmap))){
                     bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
-                    mFirebaseHelper.uploadNewPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
+                    mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
                 }
 */
 
@@ -169,6 +205,11 @@ public class NextActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    public void setupLocation(){
+
     }
 
 

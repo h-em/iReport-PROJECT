@@ -14,6 +14,5 @@ public class Report {
     private int latitude;
     private int longitude;
     private String status;
-    private String title;
     private Photo photo;
 }

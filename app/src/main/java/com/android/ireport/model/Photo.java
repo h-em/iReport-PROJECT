@@ -11,5 +11,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Photo {
+    private String photo_id;
     private String image_url;
 }

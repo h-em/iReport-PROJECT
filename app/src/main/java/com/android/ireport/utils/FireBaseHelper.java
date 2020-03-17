@@ -6,32 +6,24 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.android.ireport.R;
+import com.android.ireport.model.Photo;
+import com.android.ireport.model.Report;
 import com.android.ireport.model.User;
 import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
-import com.android.ireport.model.Report;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class FireBaseHelper {
     private static final String TAG = "FireBaseHelper";
@@ -276,10 +268,7 @@ public class FireBaseHelper {
 
             /*
                 if(ds.getKey().equals("status")){
-
                     if(ds.getValue())
-
-
                 }
             */
             count++;
@@ -288,11 +277,11 @@ public class FireBaseHelper {
         return count;
     }
 
-    public void uploadNewPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o) {
+    public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o) {
 
         FilePaths filePaths = new FilePaths();
         if (photoType.equals("new_photo")) {
-            Log.d(TAG, "uploadNewPhoto: Upload new photo.");
+            Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo.");
 
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             StorageReference storageReference = mStorageReference
@@ -305,21 +294,22 @@ public class FireBaseHelper {
             uploadTask = storageReference.putBytes(bytes);
 
             uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Log.d(TAG, "uploadNewPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+                Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
 
-                Uri firebaseUrl = taskSnapshot.getUploadSessionUri();
+                Uri firebaseImageUrl = taskSnapshot.getUploadSessionUri();
                 Toast.makeText(mContext, "photo upload success: ", Toast.LENGTH_SHORT).show();
 
-                //inset photo into db
+                //inset report and photo in db
+                addReportToDatabase(reportDescription, firebaseImageUrl.toString());
 
                 //navigate to the main page
 
             }).addOnFailureListener(e -> {
-                Log.d(TAG, "uploadNewPhoto: addOnFailureListener() -> Exception: " + e);
+                Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
                 Toast.makeText(mContext, "photo upload failed: ", Toast.LENGTH_SHORT).show();
 
             }).addOnProgressListener(taskSnapshot -> {
-                Log.d(TAG, "uploadNewPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
+                Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
                 double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
                 if (progress - 15 > mPhotoUploadProgress) {
@@ -329,12 +319,79 @@ public class FireBaseHelper {
                 Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
             });
         } else if (photoType.equals("user_profile_photo)")) {
-            Log.d(TAG, "uploadNewPhoto: Upload new photo for user profile.");
+            Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo for user profile.");
             String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             StorageReference storageReference = mStorageReference
                     .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "user_profile_photo");
 
         }
+    }
+
+    public Photo addPhotoToDatabase(String downloadUrl) {
+        Log.d(TAG, "addPhotoToDatabase: adding photo to database");
+
+
+        //creez id-ul( random string)  si il iau din db
+        String newPhotoKey = mReference.child("photos").push().getKey();
+        //creez obiectul
+        Photo photo = new Photo();
+        photo.setImage_url(downloadUrl);
+        photo.setPhoto_id(newPhotoKey);
+
+        // insert la poza in nodul "photos"
+        mReference.child("photos").child(newPhotoKey).setValue(photo);
+
+        return photo;
+    }
+
+
+    private String getTimeStamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+2"));
+        return sdf.format(new Date());
+    }
+
+
+    public void addReportToDatabase(int latitude, int longitude, String details, String downloadUrl) {
+
+
+
+
+        // set photo into "photos" node and generate a random id for it
+        Photo photo = addPhotoToDatabase(downloadUrl);
+
+
+        //creez id-ul(random string) si il iau din db
+        String newReportKey = mReference.child("reports").push().getKey();
+        //creez obiectul
+        Report report = new Report();
+        report.setCurrent_date(getTimeStamp());
+        report.setDetails(details);
+        report.setLatitude(latitude);
+        report.setLongitude(longitude);
+        report.setStatus(setStatus("new"));
+        report.setPhoto(photo);
+
+        //insert in nodul "reports" -- DONE
+        mReference.child("reports").child(newReportKey).setValue(report);
+
+        //insert in nodul de user_reports in functie de id_ul userului curent -- DONE
+        mReference.child("user_reports").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(newReportKey).setValue(report);
+    }
+
+
+    private String setStatus(String status) {
+        Log.d(TAG, "setStatus: set status.");
+
+        String current_status = "undefined";
+        if (status.equalsIgnoreCase("new")) {
+            current_status = "new";
+        } else if (status.equalsIgnoreCase("in progress")) {
+            current_status = "in progress";
+        } else if (status.equalsIgnoreCase("done")) {
+            current_status = "done";
+        }
+        return current_status;
     }
 }
