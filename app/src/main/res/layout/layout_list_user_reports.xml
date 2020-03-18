@@ -45,7 +45,7 @@
         app:layout_constraintStart_toEndOf="@+id/image_report_item_report" />
 
     <TextView
-        android:id="@+id/item_location"
+        android:id="@+id/item_location_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="52dp"

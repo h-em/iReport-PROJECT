@@ -340,7 +340,7 @@ public class FireBaseHelper {
 
 
     private String getTimeStamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+2"));
         return sdf.format(new Date());
     }

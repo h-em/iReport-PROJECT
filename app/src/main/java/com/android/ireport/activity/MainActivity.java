@@ -38,6 +38,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int VERIFY_PERMIMSSION_REQUEST = 1;
 
     private Context mContext;
+    private List<Report> reports = new ArrayList<>();
 
 
     //firebase
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onDataChange(): mUserReports: " + reports);
 
                 //save list into shared preferences
+                Utils.setReportsList(mContext, Collections.EMPTY_LIST);
                 Utils.setReportsList(mContext, reports);
 
             }
@@ -199,10 +202,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initRecyclerView();
+    }
 
     @Override
     protected void onStart() {

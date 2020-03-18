@@ -20,7 +20,6 @@ import com.android.ireport.utils.UniversalImageLoader;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
     private static final String TAG = "RecycleViewAdapter";
@@ -54,7 +53,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.reportDetails.setText(mUserReports.get(position).getDetails());
         UniversalImageLoader.setImage(mUserReports.get(position).getPhoto().getImage_url(), holder.image, null, "");
 
-
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +79,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             super(itemView);
             reportDetails = itemView.findViewById(R.id.item_details_report);
             date = itemView.findViewById(R.id.item_date);
-            location = itemView.findViewById(R.id.item_location);
+            location = itemView.findViewById(R.id.item_location_report);
             image = itemView.findViewById(R.id.image_report_item_report);
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }

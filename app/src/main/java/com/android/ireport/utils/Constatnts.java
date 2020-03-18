@@ -10,5 +10,6 @@ public class Constatnts {
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
     public static final String DEFAULT_VALUE = "";
+    public static final String DEFAULT_VALUE_LOCATION = "78987";
     public static final String REPORT_LIST_KEY = "reports_list_key";
 }

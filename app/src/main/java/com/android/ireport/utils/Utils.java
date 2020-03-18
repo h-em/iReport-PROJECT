@@ -34,12 +34,12 @@ public class Utils {
 
     public static String getLongitude(Context context) {
         SharedPreferences pref = context.getSharedPreferences(Constatnts.PRIVATE_PREFERENCES, MODE_PRIVATE);
-        return pref.getString(Constatnts.LONGITUDE, Constatnts.DEFAULT_VALUE);
+        return pref.getString(Constatnts.LONGITUDE, Constatnts.DEFAULT_VALUE_LOCATION);
     }
 
     public static String getLatitude(Context context) {
         SharedPreferences pref = context.getSharedPreferences(Constatnts.PRIVATE_PREFERENCES, MODE_PRIVATE);
-        return pref.getString(Constatnts.LATITUDE, Constatnts.DEFAULT_VALUE);
+        return pref.getString(Constatnts.LATITUDE, Constatnts.DEFAULT_VALUE_LOCATION);
     }
 
     public static void setReportsList(Context context, List<Report> reports){
