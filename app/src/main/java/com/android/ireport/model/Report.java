@@ -11,8 +11,8 @@ public class Report {
 
     private String current_date;
     private String details;
-    private int latitude;
-    private int longitude;
+    private String latitude;
+    private String longitude;
     private String status;
     private Photo photo;
 }

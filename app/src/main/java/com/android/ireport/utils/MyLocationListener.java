@@ -14,33 +14,30 @@ import java.util.List;
 import java.util.Locale;
 
 
-
 public class MyLocationListener implements LocationListener {
     private static final String TAG = "MyLocationListener";
 
 
-
-    private int mLongitude;
-    private int mLatitude;
-
     Context mContext;
-    public MyLocationListener(Context context){
+
+    public MyLocationListener(Context context) {
         mContext = context;
     }
 
     @Override
     public void onLocationChanged(Location loc) {
 
-        Toast.makeText(mContext,"Location changed: Lat: " + loc.getLatitude() + " Lng: "
-                        + loc.getLongitude(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Location changed: Lat: " + loc.getLatitude() + " Lng: "
+                + loc.getLongitude(), Toast.LENGTH_SHORT).show();
 
         String longitude = "Longitude: " + loc.getLongitude();
         Log.d(TAG, "onLocationChanged: longitude: " + longitude);
         String latitude = "Latitude: " + loc.getLatitude();
-        Log.d(TAG, "onLocationChanged: latitude: "  + latitude);
+        Log.d(TAG, "onLocationChanged: latitude: " + latitude);
 
-        mLatitude = Integer.parseInt(latitude);
-        mLongitude = Integer.parseInt(longitude);
+
+        //save location into shared preferences
+        Utils.setLocation(latitude, longitude, mContext);
 
         /*------- To get city name from coordinates -------- */
         Geocoder gcd = new Geocoder(mContext, Locale.getDefault());
@@ -51,27 +48,21 @@ public class MyLocationListener implements LocationListener {
             if (addresses.size() > 0) {
                 System.out.println(addresses.get(0).getLocality());
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onProviderDisabled(String provider) {}
-
-    @Override
-    public void onProviderEnabled(String provider) {}
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-
-    public int getLongitude() {
-        return mLongitude;
+    public void onProviderDisabled(String provider) {
     }
 
-    public int getLatitude() {
-        return mLatitude;
+    @Override
+    public void onProviderEnabled(String provider) {
     }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
 }

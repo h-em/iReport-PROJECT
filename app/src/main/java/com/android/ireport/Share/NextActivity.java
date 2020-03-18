@@ -1,6 +1,7 @@
 package com.android.ireport.Share;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,11 +20,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.android.ireport.R;
+import com.android.ireport.activity.MainActivity;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.MyLocationListener;
+import com.android.ireport.utils.Permissions;
 import com.android.ireport.utils.UniversalImageLoader;
+import com.android.ireport.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -61,28 +66,23 @@ public class NextActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private Intent intent;
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
         mContext = NextActivity.this;
+
+        mAuth = FirebaseAuth.getInstance();
+
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
         mDetails = findViewById(R.id.report_details_next_activity);
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new MyLocationListener(mContext);
 
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
-            return;
-        }
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, mLocationListener);
+
+        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, mLocationListener);
 
         setupFirebaseAuth();
 
@@ -108,11 +108,8 @@ public class NextActivity extends AppCompatActivity {
                 if (intent.hasExtra("selected_image")) {
                     imgUrl = intent.getStringExtra("selected_image");
 
-                    //latitude and longitude
-                    //details
-                    //
-
-                    String latitude =
+                    String latitude = Utils.getLatitude(mContext);
+                    String longitude = Utils.getLongitude(mContext);
                     mFirebaseHelper.uploadNewReportAndPhoto("new_photo", reportDescription, imageCount, imgUrl, null, latitude, longitude);
                 }
                 /*
@@ -121,32 +118,10 @@ public class NextActivity extends AppCompatActivity {
                     mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
                 }
 */
-
-
             }
         });
 
         setImage();
-    }
-
-    private void someMethod() {
-        /*
-            Step 1)
-            Create a data model for Photos
-
-            Step 2)
-            Add properties to the Photo Objects (caption, date, imageUrl, photo_id, tags, user_id)
-
-            Step 3)
-            Count the number of photos that the user already has.
-
-            Step 4)
-            a) Upload the photo to Firebase Storage
-            b) insert into 'photos' node
-            c) insert into 'user_photos' node
-
-         */
-
     }
 
 
@@ -170,10 +145,10 @@ public class NextActivity extends AppCompatActivity {
 
     private void setupFirebaseAuth() {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
-        mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
         Log.d(TAG, "onDataChange: image count: " + imageCount);
+
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -197,7 +172,6 @@ public class NextActivity extends AppCompatActivity {
 
                 imageCount = mFirebaseHelper.getNumberOfUserReports(dataSnapshot);
                 Log.d(TAG, "onDataChange: image count: " + imageCount);
-
             }
 
             @Override
@@ -206,12 +180,6 @@ public class NextActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    public void setupLocation(){
-
-    }
-
 
     @Override
     public void onStart() {

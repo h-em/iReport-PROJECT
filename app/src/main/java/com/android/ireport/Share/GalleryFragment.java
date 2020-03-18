@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.ireport.R;
@@ -65,8 +66,8 @@ public class GalleryFragment extends Fragment {
 
 
         //close activity on x press
-        ImageView shareClose = view.findViewById(R.id.close_view_gallery_bar);
-        shareClose.setOnClickListener(new View.OnClickListener() {
+        ImageView closeFragment = view.findViewById(R.id.close_view_gallery_bar);
+        closeFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: closing the gallery fragment.");
@@ -215,6 +216,7 @@ public class GalleryFragment extends Fragment {
             }
         });
     }
+
 }
 
 

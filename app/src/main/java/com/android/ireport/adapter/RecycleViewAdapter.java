@@ -44,7 +44,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        holder.title.setText(mUserReports.get(position).getTitle());
         //holder.username.setText(mUserReports.get(position).getUser().getUsername());
         String date = mUserReports.get(position).getCurrent_date();
         holder.date.setText(date);
@@ -69,7 +68,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         //CircleImageView image;
-        TextView title;
         //TextView username;
         //TextView reportDetails;
         TextView date;
@@ -79,7 +77,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.item_title);
             //username = itemView.findViewById(R.id.item);
             //reportDetails = itemView.findViewById(R.id.it);
             date = itemView.findViewById(R.id.item_date);

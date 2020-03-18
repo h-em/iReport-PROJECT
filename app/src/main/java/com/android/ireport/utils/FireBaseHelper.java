@@ -277,7 +277,7 @@ public class FireBaseHelper {
         return count;
     }
 
-    public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o) {
+    public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o, String longitude, String latitude) {
 
         FilePaths filePaths = new FilePaths();
         if (photoType.equals("new_photo")) {
@@ -300,7 +300,7 @@ public class FireBaseHelper {
                 Toast.makeText(mContext, "photo upload success: ", Toast.LENGTH_SHORT).show();
 
                 //inset report and photo in db
-                addReportToDatabase(reportDescription, firebaseImageUrl.toString());
+                addReportToDatabase(latitude, longitude, reportDescription, firebaseImageUrl.toString());
 
                 //navigate to the main page
 
@@ -353,10 +353,7 @@ public class FireBaseHelper {
     }
 
 
-    public void addReportToDatabase(int latitude, int longitude, String details, String downloadUrl) {
-
-
-
+    public void addReportToDatabase(String latitude, String longitude, String details, String downloadUrl) {
 
         // set photo into "photos" node and generate a random id for it
         Photo photo = addPhotoToDatabase(downloadUrl);
