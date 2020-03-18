@@ -247,33 +247,28 @@ public class FireBaseHelper {
 
     public int getNumberOfUserReports(DataSnapshot dataSnapshot) {
         int count = 0;
+
         for (DataSnapshot ds : dataSnapshot
                 .child("user_reports")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()) {
+
             count++;
         }
         return count;
     }
 
 
-    public int getResolvedReports(DataSnapshot dataSnapshot, String status) {
+    public int getNumberOfResolvedUserReports(DataSnapshot dataSnapshot) {
         int count = 0;
+
         for (DataSnapshot ds : dataSnapshot
                 .child("user_reports")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()) {
 
-            // 1. get each Report per user
-            // 2. check the status
-            // 3. then count the number og photos
-
-            /*
-                if(ds.getKey().equals("status")){
-                    if(ds.getValue())
-                }
-            */
-            count++;
+            if(ds.child("status").getValue().equals("done")) {
+                count++;
+            }
         }
-
         return count;
     }
 
@@ -297,7 +292,7 @@ public class FireBaseHelper {
                 Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
 
                 Uri firebaseImageUrl = taskSnapshot.getUploadSessionUri();
-                Toast.makeText(mContext, "photo upload success: ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
 
                 //inset report and photo in db
                 addReportToDatabase(latitude, longitude, reportDescription, firebaseImageUrl.toString());
@@ -306,14 +301,14 @@ public class FireBaseHelper {
 
             }).addOnFailureListener(e -> {
                 Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
-                Toast.makeText(mContext, "photo upload failed: ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
 
             }).addOnProgressListener(taskSnapshot -> {
                 Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
                 double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
                 if (progress - 15 > mPhotoUploadProgress) {
-                    Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) +"%", Toast.LENGTH_SHORT).show();
                     mPhotoUploadProgress = progress;
                 }
                 Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);

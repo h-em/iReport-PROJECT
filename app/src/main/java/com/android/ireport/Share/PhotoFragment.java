@@ -16,9 +16,6 @@ import androidx.fragment.app.Fragment;
 import com.android.ireport.R;
 import com.android.ireport.utils.Permissions;
 
-/**
- * Created by User on 5/28/2017.
- */
 
 public class PhotoFragment extends Fragment {
     private static final String TAG = "PhotoFragment";

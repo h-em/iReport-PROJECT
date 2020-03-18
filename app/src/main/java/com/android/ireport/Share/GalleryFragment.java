@@ -75,6 +75,8 @@ public class GalleryFragment extends Fragment {
             }
         });
 
+
+        //go to the next screen
         TextView nextScreen = view.findViewById(R.id.next_activity_textView);
         nextScreen.setOnClickListener(new View.OnClickListener() {
             @Override

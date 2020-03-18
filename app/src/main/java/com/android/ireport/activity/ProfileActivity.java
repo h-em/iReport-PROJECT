@@ -152,6 +152,12 @@ public class ProfileActivity extends AppCompatActivity {
                 //get image for user
                 //set user profile
                 setProfileDetails(userData);
+
+                //get numbers from db
+                mReportsNumber.setText(Integer.toString(mFirebaseHelper.getNumberOfUserReports(dataSnapshot)));
+                Log.d(TAG, "onDataChange: mReportsNumber: " + mReportsNumber.toString());
+                mResolvedReportsNumber.setText(Integer.toString(mFirebaseHelper.getNumberOfResolvedUserReports(dataSnapshot)));
+                Log.d(TAG, "onDataChange: mResolvedReportsNumber: "+ mResolvedReportsNumber.toString());
             }
 
             @Override
