@@ -3,10 +3,12 @@ package com.android.ireport.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Report {
 
     private String current_date;
@@ -15,4 +17,15 @@ public class Report {
     private String longitude;
     private String status;
     private Photo photo;
+
+
+
+    public void setReport(Report report) {
+        this.current_date = report.getCurrent_date();
+        this.details = report.getDetails();
+        this.latitude = report.getLatitude();
+        this.longitude = report.getLongitude();
+        this.status = report.getStatus();
+        this.photo = report.getPhoto();
+    }
 }

@@ -30,11 +30,6 @@
         </RelativeLayout>
 
 
-        <!-- layout_center_viewpager --> <!--
-                    <include layout="@layout/layout_center_viewpager"/>
-
-                -->
-
         <!--Bottom navigation-->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation_view"

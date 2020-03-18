@@ -16,12 +16,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.core.Repo;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -211,23 +214,18 @@ public class FireBaseHelper {
         return userExtras;
     }
 
-    public Report getReport(DataSnapshot dataSnapshot, String userId) {
+    public List<Report> getUserReports(DataSnapshot dataSnapshot) {
 
-       /* for (DataSnapshot ds : dataSnapshot.child("reports").getChildren()) {
+        List<Report> reports = new ArrayList<>();
+        for (DataSnapshot ds : dataSnapshot.child("user_reports")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()) {
+            Log.d(TAG, "getUserReports(): report: " + ds);
 
-            try {
-                if (ds.getKey().equals(userId)) {
-                    Log.d(TAG, "getUser: user: " + dataSnapshot);
-
-                    reports.add(ds.child(userId).getValue(Report.class));
-                }
-            } catch (NullPointerException e) {
-                Log.e(TAG, "getReports: " + e.getMessage());
-            }
+            Report report = new Report();
+            report.setReport(ds.getValue(Report.class));
+            reports.add(report);
         }
-
-        return reports;*/
-        return null;
+        return reports;
     }
 
     public void updateUsername(String username) {
@@ -265,7 +263,7 @@ public class FireBaseHelper {
                 .child("user_reports")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()) {
 
-            if(ds.child("status").getValue().equals("done")) {
+            if (ds.child("status").getValue().equals("done")) {
                 count++;
             }
         }
@@ -308,7 +306,7 @@ public class FireBaseHelper {
                 double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
                 if (progress - 15 > mPhotoUploadProgress) {
-                    Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) +"%", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                     mPhotoUploadProgress = progress;
                 }
                 Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
@@ -362,7 +360,7 @@ public class FireBaseHelper {
         report.setDetails(details);
         report.setLatitude(latitude);
         report.setLongitude(longitude);
-        report.setStatus(setStatus("new"));
+        report.setStatus("new");
         report.setPhoto(photo);
 
         //insert in nodul "reports" -- DONE
@@ -373,6 +371,8 @@ public class FireBaseHelper {
     }
 
 
+    // e nefolosita momentan
+/*
     private String setStatus(String status) {
         Log.d(TAG, "setStatus: set status.");
 
@@ -385,5 +385,5 @@ public class FireBaseHelper {
             current_status = "done";
         }
         return current_status;
-    }
+    }*/
 }

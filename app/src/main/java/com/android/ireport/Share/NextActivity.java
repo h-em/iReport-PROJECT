@@ -1,15 +1,12 @@
 package com.android.ireport.Share;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -20,13 +17,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.android.ireport.R;
-import com.android.ireport.activity.MainActivity;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.MyLocationListener;
-import com.android.ireport.utils.Permissions;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.android.ireport.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,9 +67,10 @@ public class NextActivity extends AppCompatActivity {
         setContentView(R.layout.activity_next);
         mContext = NextActivity.this;
 
+        // Initialize FireBase stuff
         mAuth = FirebaseAuth.getInstance();
-
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
+
         mDetails = findViewById(R.id.report_details_next_activity);
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

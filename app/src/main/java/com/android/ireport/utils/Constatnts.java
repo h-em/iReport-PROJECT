@@ -9,5 +9,6 @@ public class Constatnts {
     public static final String PRIVATE_PREFERENCES = "private_preferences";
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
-    public static final String DEFAULT_VALUE = "0";
+    public static final String DEFAULT_VALUE = "";
+    public static final String REPORT_LIST_KEY = "reports_list_key";
 }

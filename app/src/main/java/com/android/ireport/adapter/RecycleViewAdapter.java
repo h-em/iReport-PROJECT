@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.ireport.R;
 import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.model.Report;
+import com.android.ireport.utils.UniversalImageLoader;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
     private static final String TAG = "RecycleViewAdapter";
@@ -44,17 +48,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        //holder.username.setText(mUserReports.get(position).getUser().getUsername());
-        String date = mUserReports.get(position).getCurrent_date();
-        holder.date.setText(date);
+        holder.date.setText(mUserReports.get(position).getCurrent_date());
         String location = mUserReports.get(position).getLatitude() + " " + mUserReports.get(position).getLongitude();
         holder.location.setText(location);
-        //holder.reportDetails.setText(mUserReports.get(position).getDetails());
+        holder.reportDetails.setText(mUserReports.get(position).getDetails());
+        UniversalImageLoader.setImage(mUserReports.get(position).getPhoto().getImage_url(), holder.image, null, "");
+
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 mFragmentManager.beginTransaction().replace(R.id.fragment_container, new EditReportFragment()).commit();
             }
         });
@@ -67,9 +70,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        //CircleImageView image;
-        //TextView username;
-        //TextView reportDetails;
+        ImageView image;
+        TextView reportDetails;
         TextView date;
         TextView location;
         //TextView status;
@@ -77,10 +79,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //username = itemView.findViewById(R.id.item);
-            //reportDetails = itemView.findViewById(R.id.it);
+            reportDetails = itemView.findViewById(R.id.item_details_report);
             date = itemView.findViewById(R.id.item_date);
             location = itemView.findViewById(R.id.item_location);
+            image = itemView.findViewById(R.id.image_report_item_report);
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }
     }
