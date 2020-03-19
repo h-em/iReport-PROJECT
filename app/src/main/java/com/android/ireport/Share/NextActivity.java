@@ -1,12 +1,15 @@
 package com.android.ireport.Share;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,12 +20,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.android.ireport.R;
+import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.MyLocationListener;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.android.ireport.utils.Utils;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -103,8 +114,23 @@ public class NextActivity extends AppCompatActivity {
                 if (intent.hasExtra("selected_image")) {
                     imgUrl = intent.getStringExtra("selected_image");
 
+
+                    if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(NextActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                Constatnts.REQUEST_CODE_LOCATION_PERMISSION);
+                    }else{
+                        getCurrentLocation();
+                    }
+
+
                     String latitude = Utils.getLatitude(mContext);
                     String longitude = Utils.getLongitude(mContext);
+
+
+
+
                     mFirebaseHelper.uploadNewReportAndPhoto("new_photo", reportDescription, imageCount, imgUrl, null, latitude, longitude);
                 }
                 /*
@@ -119,6 +145,15 @@ public class NextActivity extends AppCompatActivity {
         setImage();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == Constatnts.REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                getCurrentLocation();
+            }
+        }
+    }
 
     private void setImage() {
         intent = getIntent();
@@ -174,6 +209,36 @@ public class NextActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getCurrentLocation(){
+        Log.d(TAG, "getCurrentLocation(): getting current location.");
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationServices.getFusedLocationProviderClient(NextActivity.this)
+                .requestLocationUpdates(locationRequest, new LocationCallback(){
+
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(NextActivity.this)
+                                .removeLocationUpdates(this);
+                        if(locationResult != null && locationResult.getLocations().size() > 0){
+                            int latestLocationIndex = locationResult.getLocations().size() - 1;
+                            double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                            double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+
+                            Utils.setLocation(Double.toString(latitude), Double.toString(longitude), mContext);
+
+                            Log.d(TAG, "onLocationResult(): latitude: "+ latitude);
+                            Log.d(TAG, "onLocationResult(): longitude: "+ longitude);
+                        }
+
+                    }
+                },Looper.getMainLooper());
     }
 
     @Override

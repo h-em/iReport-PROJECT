@@ -12,4 +12,6 @@ public class Constatnts {
     public static final String DEFAULT_VALUE = "";
     public static final String DEFAULT_VALUE_LOCATION = "78987";
     public static final String REPORT_LIST_KEY = "reports_list_key";
+
+    public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
 }
