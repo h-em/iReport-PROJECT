@@ -28,7 +28,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private Context mContext;
     private FragmentManager mFragmentManager;
 
-
     public RecycleViewAdapter(List<Report> mUserReports, Context mContext, FragmentManager fragmentManager) {
         this.mUserReports = mUserReports;
         this.mContext = mContext;

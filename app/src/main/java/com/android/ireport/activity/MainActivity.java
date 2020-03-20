@@ -2,10 +2,11 @@ package com.android.ireport.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,6 @@ import com.android.ireport.adapter.RecycleViewAdapter;
 import com.android.ireport.login.LoginActivity;
 import com.android.ireport.model.Report;
 import com.android.ireport.utils.BottomNavigationHelper;
-import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.Permissions;
 import com.android.ireport.utils.UniversalImageLoader;
@@ -32,12 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int VERIFY_PERMIMSSION_REQUEST = 1;
 
     private Context mContext;
-    private List<Report> reports = new ArrayList<>();
+    private TextView mNoReportText;
 
 
     //firebase
@@ -66,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         Log.d(TAG, "onCreate: starting the app.");
         mContext = MainActivity.this;
+        mNoReportText = findViewById(R.id.no_reports_text);
 
         // Initialize FireBase stuff
         mAuth = FirebaseAuth.getInstance();
@@ -168,6 +165,11 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         RecycleViewAdapter adapter = new RecycleViewAdapter(reports, mContext, getSupportFragmentManager());
+        if (adapter.getItemCount() > 0) {
+            mNoReportText.setVisibility(View.GONE);
+        }else{
+            mNoReportText.setVisibility(View.VISIBLE);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(adapter);
 

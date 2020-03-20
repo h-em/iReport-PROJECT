@@ -26,10 +26,8 @@ import androidx.core.content.ContextCompat;
 import com.android.ireport.R;
 import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
-import com.android.ireport.utils.MyLocationListener;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.android.ireport.utils.Utils;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -58,12 +56,6 @@ public class NextActivity extends AppCompatActivity {
     private EditText mDetails;
     private Context mContext;
 
-
-    // location
-    LocationManager mLocationManager;
-    LocationListener mLocationListener;
-
-
     //vars
     private String mAppend = "file:/";
     private int imageCount = 0;
@@ -83,12 +75,6 @@ public class NextActivity extends AppCompatActivity {
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
 
         mDetails = findViewById(R.id.report_details_next_activity);
-
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationListener = new MyLocationListener(mContext);
-
-
-        //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, mLocationListener);
 
         setupFirebaseAuth();
 
@@ -127,7 +113,6 @@ public class NextActivity extends AppCompatActivity {
 
                     String latitude = Utils.getLatitude(mContext);
                     String longitude = Utils.getLongitude(mContext);
-
 
 
 
