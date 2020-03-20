@@ -47,10 +47,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        holder.date.setText(mUserReports.get(position).getCurrent_date());
-        String location = mUserReports.get(position).getLatitude() + " " + mUserReports.get(position).getLongitude();
-        holder.location.setText(location);
-        holder.reportDetails.setText(mUserReports.get(position).getDetails());
+        holder.date.setText("Date: " + mUserReports.get(position).getCurrent_date());
+        holder.latitude.setText("Latitude: " + mUserReports.get(position).getLatitude());
+        holder.longitude.setText("Longitude: " + mUserReports.get(position).getLongitude());
+        //holder.reportDetails.setText("Details: " + mUserReports.get(position).getDetails());
+        holder.status.setText("Status: " + mUserReports.get(position).getStatus());
         UniversalImageLoader.setImage(mUserReports.get(position).getPhoto().getImage_url(), holder.image, null, "");
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
@@ -69,18 +70,21 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
-        TextView reportDetails;
+        //TextView reportDetails;
         TextView date;
-        TextView location;
-        //TextView status;
+        TextView latitude;
+        TextView longitude;
+        TextView status;
         ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            reportDetails = itemView.findViewById(R.id.item_details_report);
+            //reportDetails = itemView.findViewById(R.id.item_details_report);
             date = itemView.findViewById(R.id.item_date);
-            location = itemView.findViewById(R.id.item_location_report);
+            latitude = itemView.findViewById(R.id.item_latitude_report);
+            longitude = itemView.findViewById(R.id.item_longitude_report);
             image = itemView.findViewById(R.id.image_report_item_report);
+            status = itemView.findViewById(R.id.status_report);
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }
     }

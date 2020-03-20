@@ -151,6 +151,8 @@ public class NextActivity extends AppCompatActivity {
         if(requestCode == Constatnts.REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getCurrentLocation();
+            }else{
+                Toast.makeText(mContext, "Permisison denied!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -194,7 +196,6 @@ public class NextActivity extends AppCompatActivity {
                 }
             }
         };
-
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
