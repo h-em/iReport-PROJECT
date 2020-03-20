@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.android.ireport.R;
+import com.android.ireport.activity.MainActivity;
 import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
@@ -123,8 +125,17 @@ public class NextActivity extends AppCompatActivity {
                     bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
                     mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
                 }
+
 */
+
+                //small delay
+                new Handler().postDelayed(() -> {
+                    Intent gotToHome = new Intent(mContext, MainActivity.class);
+                    startActivity(gotToHome);
+                    finish();
+                }, 2500);
             }
+
         });
 
         setImage();
