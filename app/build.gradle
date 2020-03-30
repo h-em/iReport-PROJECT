@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.android.ireport"
         minSdkVersion 26
@@ -40,7 +40,7 @@ dependencies {
     //fireBase realTime database
     implementation 'com.google.firebase:firebase-database:19.2.1'
     //fireBase auth
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
     //fireBase crash
     implementation "com.google.firebase:firebase-crash:16.2.1"
     //recycleView

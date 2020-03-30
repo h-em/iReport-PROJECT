@@ -1,7 +1,5 @@
 package com.android.ireport.adapter;
 
-import android.widget.Adapter;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

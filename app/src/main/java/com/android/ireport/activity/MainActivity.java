@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int VERIFY_PERMIMSSION_REQUEST = 1;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
 
     private boolean checkPermissionArray(String[] permission) {
 
