@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.ireport.R;
 import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.model.Report;
+import com.android.ireport.utils.UniversalImageLoader;
 
 import java.util.List;
+
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
     private static final String TAG = "RecycleViewAdapter";
@@ -24,7 +27,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private List<Report> mUserReports;
     private Context mContext;
     private FragmentManager mFragmentManager;
-
 
     public RecycleViewAdapter(List<Report> mUserReports, Context mContext, FragmentManager fragmentManager) {
         this.mUserReports = mUserReports;
@@ -44,18 +46,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        holder.title.setText(mUserReports.get(position).getTitle());
-        //holder.username.setText(mUserReports.get(position).getUser().getUsername());
-        String date = mUserReports.get(position).getCurrent_date();
-        holder.date.setText(date);
-        String location = mUserReports.get(position).getLatitude() + " " + mUserReports.get(position).getLongitude();
-        holder.location.setText(location);
-        //holder.reportDetails.setText(mUserReports.get(position).getDetails());
+        holder.date.setText("Date: " + mUserReports.get(position).getCurrent_date());
+        holder.latitude.setText("Latitude: " + mUserReports.get(position).getLatitude());
+        holder.longitude.setText("Longitude: " + mUserReports.get(position).getLongitude());
+        //holder.reportDetails.setText("Details: " + mUserReports.get(position).getDetails());
+        holder.status.setText("Status: " + mUserReports.get(position).getStatus());
+        UniversalImageLoader.setImage(mUserReports.get(position).getPhoto().getImage_url(), holder.image, null, "");
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 mFragmentManager.beginTransaction().replace(R.id.fragment_container, new EditReportFragment()).commit();
             }
         });
@@ -68,22 +68,22 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        //CircleImageView image;
-        TextView title;
-        //TextView username;
+        ImageView image;
         //TextView reportDetails;
         TextView date;
-        TextView location;
-        //TextView status;
+        TextView latitude;
+        TextView longitude;
+        TextView status;
         ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.item_title);
-            //username = itemView.findViewById(R.id.item);
-            //reportDetails = itemView.findViewById(R.id.it);
+            //reportDetails = itemView.findViewById(R.id.item_details_report);
             date = itemView.findViewById(R.id.item_date);
-            location = itemView.findViewById(R.id.item_location);
+            latitude = itemView.findViewById(R.id.item_latitude_report);
+            longitude = itemView.findViewById(R.id.item_longitude_report);
+            image = itemView.findViewById(R.id.image_report_item_report);
+            status = itemView.findViewById(R.id.status_report);
             parentLayout = itemView.findViewById(R.id.parent_layout);
         }
     }

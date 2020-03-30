@@ -22,6 +22,16 @@
             android:layout_above="@id/bottom_navigation_view" >
 
 
+            <TextView
+                android:id="@+id/no_reports_text"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="250dp"
+                android:textSize="20sp"
+                android:text="You didn't report anything until now. \n      Tap + to add you first report."/>
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
@@ -29,11 +39,6 @@
 
         </RelativeLayout>
 
-
-        <!-- layout_center_viewpager --> <!--
-                    <include layout="@layout/layout_center_viewpager"/>
-
-                -->
 
         <!--Bottom navigation-->
         <com.google.android.material.bottomnavigation.BottomNavigationView

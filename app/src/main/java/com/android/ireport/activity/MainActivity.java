@@ -5,29 +5,36 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.ireport.R;
 import com.android.ireport.adapter.RecycleViewAdapter;
-import com.android.ireport.adapter.SectionPagerAdapter;
-import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.login.LoginActivity;
 import com.android.ireport.model.Report;
 import com.android.ireport.utils.BottomNavigationHelper;
-import com.android.ireport.utils.Permission;
+import com.android.ireport.utils.FireBaseHelper;
+import com.android.ireport.utils.Permissions;
 import com.android.ireport.utils.UniversalImageLoader;
+import com.android.ireport.utils.Utils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -35,23 +42,31 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private Context mContext = MainActivity.this;
-    private List<Report> userReports = new ArrayList<>();
-
-    // Firebase auth
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-
     public static final int VERIFY_PERMIMSSION_REQUEST = 1;
+
+    private Context mContext;
+    private TextView mNoReportText;
+
+
+    //firebase
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mReference;
+    private FireBaseHelper mFireBaseHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Log.d(TAG, "onCreate: starting the app.");
+        mContext = MainActivity.this;
+        mNoReportText = findViewById(R.id.no_reports_text);
 
-        // Initialize Firebase Auth
+        // Initialize FireBase stuff
         mAuth = FirebaseAuth.getInstance();
+        mFireBaseHelper = new FireBaseHelper(mContext);
         firebaseAuthSetup();
 
         //create ImageLoader Object
@@ -61,19 +76,20 @@ public class MainActivity extends AppCompatActivity {
         initRecyclerView();
 
 
-        if(checkPermissionArray(Permission.PERMISSIONS)){
+        if (checkPermissionArray(Permissions.PERMISSIONS)) {
 
-        }else{
-            verifyPermission(Permission.PERMISSIONS);
+        } else {
+            verifyPermission(Permissions.PERMISSIONS);
         }
 
     }
+
 
     private boolean checkPermissionArray(String[] permission) {
 
         for (int i = 0; i < permission.length; i++) {
             String check = permission[i];
-            if(!checkPermissions(check)){
+            if (!checkPermissions(check)) {
                 return false;
             }
         }
@@ -86,17 +102,17 @@ public class MainActivity extends AppCompatActivity {
 
         int permissionRequest = ActivityCompat.checkSelfPermission(mContext, permission);
 
-        if(permissionRequest != PackageManager.PERMISSION_GRANTED){
+        if (permissionRequest != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "checkPermissions:  permission was NOT granted for " + permission);
             return false;
-        }else{
+        } else {
             Log.d(TAG, "checkPermissions:  permission was granted for " + permission);
 
             return true;
         }
     }
 
-    public void verifyPermission(String[] permissions){
+    public void verifyPermission(String[] permissions) {
         ActivityCompat.requestPermissions(
                 MainActivity.this,
                 permissions,
@@ -109,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "setupBottomNavigationView: setting bottomNavigationView.");
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        BottomNavigationHelper.enableNavigation(mContext,this, bottomNavigationView);
+        BottomNavigationHelper.enableNavigation(mContext, this, bottomNavigationView);
     }
 
     private void initImageLoader() {
@@ -118,41 +134,51 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        Log.d(TAG, "initRecyclerView: init recycleview.");
-/*
-        userReports.add(new Report("title","details", Calendar.getInstance().getTime().toString(),
-                4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new Report("title","details2",Calendar.getInstance().getTime().toString(),
-                456422,654564222, 1, new User("ion2","ion@mail2")));
-        userReports.add(new Report("title","details", Calendar.getInstance().getTime().toString(),
-                4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new Report("title","details2",Calendar.getInstance().getTime().toString(),
-                456422,654564222, 1, new User("ion2","ion@mail2")));
-        userReports.add(new Report("title","details", Calendar.getInstance().getTime().toString(),
-                4564,654564, 1, new User("ion","ion@mail")));
-        userReports.add(new Report("title","details2",Calendar.getInstance().getTime().toString(),
-                   456422,654564222, 1, new User("ion2","ion@mail2")));
-*/
+        Log.d(TAG, "initRecyclerView(): init recycleview.");
+
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mReference = mFirebaseDatabase.getReference();
+
+
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                List<Report> reports;
+                reports = mFireBaseHelper.getUserReports(dataSnapshot);
+                Log.d(TAG, "onDataChange(): mUserReports: " + reports);
+
+                //save list into shared preferences
+                Utils.setReportsList(mContext, Collections.EMPTY_LIST);
+                Utils.setReportsList(mContext, reports);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        //get list from shared preferences
+        List<Report> reports = Utils.getReportsList(mContext);
+        Log.d(TAG, "initRecyclerView(): reports: " + reports);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(userReports, mContext, getSupportFragmentManager());
+        RecycleViewAdapter adapter = new RecycleViewAdapter(reports, mContext, getSupportFragmentManager());
+        if (adapter.getItemCount() > 0) {
+            mNoReportText.setVisibility(View.GONE);
+        }else{
+            mNoReportText.setVisibility(View.VISIBLE);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(adapter);
-    }
 
-    private void setupViewPager() {
-        SectionPagerAdapter adapter = new SectionPagerAdapter(getSupportFragmentManager(), 0);
-        adapter.addFragment(new EditReportFragment());
-        ViewPager2 viewPager = findViewById(R.id.container_view_pager_2);
-        //viewPager.setAdapter(adapter);
-
-        ////ca sa mearga viewPager2 tre sa am o clasa care implementez Adapter si apoi setez adapterul in viewPager2
     }
 
 
-    private void checkCurrentUser(FirebaseUser user){
+    private void checkCurrentUser(FirebaseUser user) {
         Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
-        if(user == null){
+        if (user == null) {
             Toast.makeText(mContext, "User is not logged", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext, LoginActivity.class);
             startActivity(intent);
@@ -160,37 +186,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void firebaseAuthSetup(){
+    private void firebaseAuthSetup() {
         Log.d(TAG, "firebaseAuthSetup: setting up firebase auth.");
-        mAuthStateListener = firebaseAuth -> {
 
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            checkCurrentUser(user);
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                checkCurrentUser(user);
 
-            if(user != null){
-                Log.d(TAG, "onAuthStateChanged: user is signed in. userId: " + user.getUid());
-                //user  is signed  in
-
-            }else{
-                Log.d(TAG, "onAuthStateChanged: user is signed out.");
-                //user is signed out
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged: signed_in: " + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged: signed_out.");
+                }
             }
         };
-
     }
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initRecyclerView();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthStateListener);
+        mAuth.addAuthStateListener(mAuthListener);
         checkCurrentUser(mAuth.getCurrentUser());
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(mAuthStateListener);
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 }

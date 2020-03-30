@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rellaout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/snippet_top_next_toolbar" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rellaout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rellaout1">
+
+            <EditText
+                android:id="@+id/report_details_next_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Description" />
+
+            <ImageView
+                android:id="@+id/image_taken"
+                android:layout_width="350dp"
+                android:layout_height="350dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/report_details_next_activity" />
+
+            <TextView
+                android:id="@+id/location_of_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_taken"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="20dp"
+                android:text="Location"
+                android:textAlignment="center"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

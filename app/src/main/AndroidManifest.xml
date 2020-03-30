@@ -6,8 +6,11 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <uses-permission android:name="android.hardware.camera2.full"/>
 
@@ -29,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CameraActivity"
+        <activity android:name=".Share.ShareActivity"
             android:launchMode="singleTask"
             />
         <activity android:name=".activity.ProfileActivity"
@@ -38,6 +41,9 @@
         <activity android:name=".activity.EditProfileActivity"/>
         <activity android:name=".login.LoginActivity"/>
         <activity android:name=".login.RegisterActivity"/>
+        <activity android:name=".Share.NextActivity"
+            android:windowSoftInputMode="adjustPan"
+        />
 
 
     </application>
