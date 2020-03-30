@@ -1,4 +1,4 @@
-package com.android.ireport.Share;
+package com.android.ireport.cameraFlow;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,7 +16,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.android.ireport.R;
@@ -29,11 +28,6 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-/**
- * Created by User on 5/28/2017.
- */
 
 public class GalleryFragment extends Fragment {
     private static final String TAG = "GalleryFragment";

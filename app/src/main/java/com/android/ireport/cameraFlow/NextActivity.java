@@ -1,4 +1,4 @@
-package com.android.ireport.Share;
+package com.android.ireport.cameraFlow;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,7 +44,6 @@ import com.google.firebase.database.ValueEventListener;
 public class NextActivity extends AppCompatActivity {
 
     private static final String TAG = "NextActivity";
-
 
     //firebase
     private FirebaseAuth mAuth;

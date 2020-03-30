@@ -1,4 +1,4 @@
-package com.android.ireport.Share;
+package com.android.ireport.cameraFlow;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

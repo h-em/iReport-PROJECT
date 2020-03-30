@@ -1,4 +1,4 @@
-package com.android.ireport.Share;
+package com.android.ireport.cameraFlow;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

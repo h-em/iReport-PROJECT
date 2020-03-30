@@ -1,4 +1,4 @@
-package com.android.ireport.Share;
+package com.android.ireport.cameraFlow;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
