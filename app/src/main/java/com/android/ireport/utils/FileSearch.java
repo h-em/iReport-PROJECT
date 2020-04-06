@@ -25,9 +25,11 @@ public class FileSearch {
         File file = new File(directory);
         File[] files = file.listFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-                pathArray.add(files[i].getAbsolutePath());
+        if(files != null) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isFile()) {
+                    pathArray.add(files[i].getAbsolutePath());
+                }
             }
         }
 

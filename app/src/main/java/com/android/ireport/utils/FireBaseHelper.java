@@ -13,6 +13,7 @@ import com.android.ireport.model.User;
 import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -215,14 +216,18 @@ public class FireBaseHelper {
 
     public List<Report> getUserReports(DataSnapshot dataSnapshot) {
 
-        List<Report> reports = new ArrayList<>();
-        for (DataSnapshot ds : dataSnapshot.child("user_reports")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()) {
-            Log.d(TAG, "getUserReports(): report: " + ds);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            Report report = new Report();
-            report.setReport(ds.getValue(Report.class));
-            reports.add(report);
+        List<Report> reports = new ArrayList<>();
+        if(currentUser != null) {
+            for (DataSnapshot ds : dataSnapshot.child("user_reports")
+                    .child(currentUser.getUid()).getChildren()) {
+                Log.d(TAG, "getUserReports(): report: " + ds);
+
+                Report report = new Report();
+                report.setReport(ds.getValue(Report.class));
+                reports.add(report);
+            }
         }
         return reports;
     }
