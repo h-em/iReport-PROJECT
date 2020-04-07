@@ -13,8 +13,6 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> mFragmentList = new ArrayList<>();
 
-
-
     public SectionPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
     }

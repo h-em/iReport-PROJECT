@@ -9,11 +9,9 @@ import java.util.List;
 
 
 class SectionsPagerAdapter extends FragmentPagerAdapter {
-
     private static final String TAG = "SectionsPagerAdapter";
 
     private final List<Fragment> mFragmentList = new ArrayList<>();
-
 
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -24,13 +22,12 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.get(position);
     }
 
-
     @Override
     public int getCount() {
         return mFragmentList.size();
     }
 
-    public void addFragment(Fragment fragment){
+    public void addFragment(Fragment fragment) {
         mFragmentList.add(fragment);
     }
 

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 
 import com.android.ireport.R;
-import com.android.ireport.cameraFlow.ShareActivity;
+import com.android.ireport.cameraFlow.CameraActivity;
 import com.android.ireport.activity.MainActivity;
 import com.android.ireport.activity.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,7 +27,7 @@ public class BottomNavigationHelper {
                         callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;
                     case R.id.menu_item_camera:
-                        Intent cameraIntent = new Intent(context, ShareActivity.class);
+                        Intent cameraIntent = new Intent(context, CameraActivity.class);
                         context.startActivity(cameraIntent);
                         callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;

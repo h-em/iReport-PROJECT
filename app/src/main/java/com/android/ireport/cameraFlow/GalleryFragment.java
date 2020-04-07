@@ -34,7 +34,6 @@ public class GalleryFragment extends Fragment {
 
     private static final int NUM_GRID_COLUMNS = 3;
 
-
     private GridView mGridView;
     private ImageView mGalleryImage;
     private ProgressBar mProgressBar;
@@ -55,23 +54,30 @@ public class GalleryFragment extends Fragment {
         mGridView = view.findViewById(R.id.gidView_fragment_gallery);
         mDirectorySpinner = view.findViewById(R.id.spinner_gallery_bar);
         mProgressBar = view.findViewById(R.id.progressbarr_gallery_fragment);
+
+        //hide progressBar
         mProgressBar.setVisibility(View.GONE);
-        directories = new ArrayList<>();
 
-
-        //close activity on x press
+        //close activity on X press
         ImageView closeFragment = view.findViewById(R.id.close_view_gallery_bar);
-        closeFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: closing the gallery fragment.");
-                getActivity().finish();
-            }
-        });
-
+        onClickToCloseTheFragment(closeFragment);
 
         //go to the next screen
         TextView nextScreen = view.findViewById(R.id.next_activity_textView);
+        goToNextScreen(nextScreen);
+
+        init();
+
+        return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        directories = new ArrayList<>();
+    }
+
+    private void goToNextScreen(TextView nextScreen) {
         nextScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,12 +85,13 @@ public class GalleryFragment extends Fragment {
 
 
                 //if(isRootTask()){
-                    Intent intent = new Intent(getActivity(), NextActivity.class);
-                    intent.putExtra("selected_image", mSelectedImage);
-                    startActivity(intent);
+                //send an intent to start NextActivity + extra image
+                Intent intent = new Intent(getActivity(), NextActivity.class);
+                intent.putExtra("selected_image", mSelectedImage);
+                startActivity(intent);
                     /*
                 }else{
-/*
+                /*
                     Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
                     intent.putExtra("selected_image", mSelectedImage);
                     intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
@@ -94,23 +101,28 @@ public class GalleryFragment extends Fragment {
 
             }
         });
+    }
 
-        init();
-
-        return view;
+    private void onClickToCloseTheFragment(ImageView closeFragment) {
+        closeFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: closing the gallery fragment.");
+                getActivity().finish();
+            }
+        });
     }
 
 
-    private boolean isRootTask(){
-        if(((ShareActivity)getActivity()).getTask() == 0){
+    private boolean isRootTask() {
+        if (((CameraActivity) getActivity()).getTask() == 0) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    private void init(){
+    private void init() {
         FilePaths filePaths = new FilePaths();
 
         //check for other folders inside "/storage/emulated/0/pictures"
@@ -119,7 +131,7 @@ public class GalleryFragment extends Fragment {
         }
         directories.add(filePaths.CAMERA);
 
-
+        //get the directory names
         List<String> directoryNames = new ArrayList<>();
         for (int i = 0; i < directories.size(); i++) {
             Log.d(TAG, "init: directory: " + directories.get(i));
@@ -128,8 +140,9 @@ public class GalleryFragment extends Fragment {
             directoryNames.add(string);
         }
 
-        //pun in spinner lista cu numele directoarelor
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, directoryNames);
+        //set the dropDown the list that contains the name of directories
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, directoryNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mDirectorySpinner.setAdapter(adapter);
 
@@ -144,27 +157,25 @@ public class GalleryFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
     }
 
 
-    private void setupGridView(String selectedDirectory){
+    private void setupGridView(String selectedDirectory) {
         Log.d(TAG, "setupGridView: directory chosen: " + selectedDirectory);
         final List<String> imgURLs = FileSearch.getFilePath(selectedDirectory);
 
         //set the grid column width
         int gridWidth = getResources().getDisplayMetrics().widthPixels;
-        int imageWidth = gridWidth/NUM_GRID_COLUMNS;
+        int imageWidth = gridWidth / NUM_GRID_COLUMNS;
         mGridView.setColumnWidth(imageWidth);
 
         //use the grid adapter to adapter the images to gridview
         GridImgAdapter adapter = new GridImgAdapter(getActivity(), R.layout.layout_grid_imageview, mAppend, imgURLs);
         mGridView.setAdapter(adapter);
 
-        if(imgURLs.size() > 0) {
+        if (imgURLs.size() > 0) {
             //set the first image to be displayed when the activity fragment view is inflated
             try {
                 setImage(imgURLs.get(0), mGalleryImage, mAppend);
@@ -174,6 +185,7 @@ public class GalleryFragment extends Fragment {
             }
 
         }
+        //set the clicked image to be displayed
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -187,7 +199,7 @@ public class GalleryFragment extends Fragment {
     }
 
 
-    private void setImage(String imgURL, ImageView image, String append){
+    private void setImage(String imgURL, ImageView image, String append) {
         Log.d(TAG, "setImage: setting image");
 
         ImageLoader imageLoader = ImageLoader.getInstance();

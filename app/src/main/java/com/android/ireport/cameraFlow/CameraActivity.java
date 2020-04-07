@@ -17,7 +17,7 @@ import com.google.android.material.tabs.TabLayout;
 
 
 
-public class ShareActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "ShareActivity";
 
     private static final int ACTIVITY_NUM = 2;
@@ -33,14 +33,17 @@ public class ShareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_share);
         Log.d(TAG, "onCreate: started.");
 
-        mContext = ShareActivity.this;
+        mContext = CameraActivity.this;
 
+        askForPermission();
+    }
+
+    private void askForPermission() {
         if (checkPermissionsArray(Permissions.PERMISSIONS)) {
             setupViewPager();
         } else {
             verifyPermissions(Permissions.PERMISSIONS);
         }
-
     }
 
     public int getCurrentTabNumber() {
@@ -74,7 +77,7 @@ public class ShareActivity extends AppCompatActivity {
         Log.d(TAG, "verifyPermissions: verifying permissions.");
 
         ActivityCompat.requestPermissions(
-                ShareActivity.this,
+                CameraActivity.this,
                 permissions,
                 VERIFY_PERMISSIONS_REQUEST
         );
@@ -96,7 +99,7 @@ public class ShareActivity extends AppCompatActivity {
     public boolean checkPermissions(String permission) {
         Log.d(TAG, "checkPermissions: checking permission: " + permission);
 
-        int permissionRequest = ActivityCompat.checkSelfPermission(ShareActivity.this, permission);
+        int permissionRequest = ActivityCompat.checkSelfPermission(CameraActivity.this, permission);
 
         if (permissionRequest != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "checkPermissions: \n Permissions was not granted for: " + permission);

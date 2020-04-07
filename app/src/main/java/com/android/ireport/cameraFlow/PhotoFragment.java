@@ -85,13 +85,13 @@ public class PhotoFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: launching camera.");
 
-                if(((ShareActivity)getActivity()).getCurrentTabNumber() == PHOTO_FRAGMENT_NUM){
-                    if(((ShareActivity)getActivity()).checkPermissions(Permissions.CAMERA_PERMISSION[0])){
+                if(((CameraActivity)getActivity()).getCurrentTabNumber() == PHOTO_FRAGMENT_NUM){
+                    if(((CameraActivity)getActivity()).checkPermissions(Permissions.CAMERA_PERMISSION[0])){
                         Log.d(TAG, "onClick: starting camera");
                         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
                     }else{
-                        Intent intent = new Intent(getActivity(), ShareActivity.class);
+                        Intent intent = new Intent(getActivity(), CameraActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
@@ -103,7 +103,7 @@ public class PhotoFragment extends Fragment {
 
 
     private boolean isRootTask(){
-        if(((ShareActivity)getActivity()).getTask() == 0) {
+        if(((CameraActivity)getActivity()).getTask() == 0) {
             return true;
         }
         return false;

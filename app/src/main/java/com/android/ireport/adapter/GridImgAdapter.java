@@ -45,9 +45,7 @@ public class GridImgAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        /*
-        Viewholder build pattern (Similar to recyclerview)
-         */
+        //Viewholder build pattern (Similar to recyclerview)
         final ViewHolder holder;
         if(convertView == null){
             convertView = mInflater.inflate(layoutResource, parent, false);
