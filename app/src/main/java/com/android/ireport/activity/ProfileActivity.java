@@ -23,6 +23,8 @@ import com.android.ireport.model.UserExtras;
 import com.android.ireport.utils.BottomNavigationHelper;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
+import com.android.ireport.utils.Utils;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +33,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Collections;
+import java.util.List;
+
 
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
@@ -43,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mUsername;
     private TextView mReportsNumber;
     private TextView mResolvedReportsNumber;
-   // private TextView mEmail;
+    // private TextView mEmail;
 
 
     // Firebase auth
@@ -95,7 +101,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, EditProfileActivity.class);
-                intent.putExtra("username",mUsername.getText().toString());
+                intent.putExtra("username", mUsername.getText().toString());
                 startActivity(intent);
             }
         });
@@ -107,6 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
         logOutButton.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() != null) {
                 mAuth.signOut();
+                Utils.setReportsList(mContext, Collections.EMPTY_LIST);
                 Intent intent = new Intent(mContext, LoginActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -121,9 +128,27 @@ public class ProfileActivity extends AppCompatActivity {
     public void setUserProfileImage() {
         Log.d(TAG, "setUserProfileImage: setting profile image.");
 
-        String imageURL = "https://tinyjpg.com/images/social/website.jpg";
 
-        UniversalImageLoader.setImage(imageURL, mProfilePhoto, mProgressBar, "");
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                UserExtras userExtras = mFirebaseHelper.getUserExtras(dataSnapshot, userUid);
+
+                String imageURL = userExtras.getProfile_photo();
+
+                UniversalImageLoader.setImage(imageURL, mProfilePhoto, mProgressBar, "");
+                /*Glide.with(mContext)
+                        .load(imageURL)
+                        .into(mProfilePhoto);*/
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
+
     }
 
     private void firebaseAuthSetup() {
@@ -157,7 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
                 mReportsNumber.setText(Integer.toString(mFirebaseHelper.getNumberOfUserReports(dataSnapshot)));
                 Log.d(TAG, "onDataChange: mReportsNumber: " + mReportsNumber.toString());
                 mResolvedReportsNumber.setText(Integer.toString(mFirebaseHelper.getNumberOfResolvedUserReports(dataSnapshot)));
-                Log.d(TAG, "onDataChange: mResolvedReportsNumber: "+ mResolvedReportsNumber.toString());
+                Log.d(TAG, "onDataChange: mResolvedReportsNumber: " + mResolvedReportsNumber.toString());
             }
 
             @Override
@@ -176,13 +201,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         //UniversalImageLoader.setImage(userExtras.getProfile_photo(), mProfilePhoto, null, "");
         mUsername.setText(user.getUsername());
-        mReportsNumber.setText(userExtras.getReports_nr()+"");
-        mResolvedReportsNumber.setText(userExtras.getResolved_reports_nr()+"");
+        mReportsNumber.setText(userExtras.getReports_nr() + "");
+        mResolvedReportsNumber.setText(userExtras.getResolved_reports_nr() + "");
 
     }
 
 
-    public void setNumber(int number){
+    public void setNumber(int number) {
 
     }
 

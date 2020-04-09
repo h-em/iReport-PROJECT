@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
+import com.android.ireport.cameraFlow.CameraActivity;
+import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +62,36 @@ public class EditProfileActivity extends AppCompatActivity {
         saveEditedDetails();
         //set the image
         setUserProfileImage();
+
+        getIncomingIntent();
+
+        changeProfilePhoto();
+
+    }
+
+    private void changeProfilePhoto() {
+        mChangePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: change user profile photo.");
+                Intent intent = new Intent(mContext, CameraActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void getIncomingIntent() {
+        Intent intent = getIntent();
+
+        if (intent.hasExtra("selected_image")) {
+            if (intent.hasExtra("return_to_activity")) {
+                //set the new profile pictures
+                String imageUrl = intent.getStringExtra("selected_image");
+                mFirebaseHelper.uploadPhoto(imageUrl);
+                finish();
+            }
+        }
     }
 
 
@@ -83,8 +115,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     public void saveEditedDetails() {
-
-
         mSaveLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,16 +132,6 @@ public class EditProfileActivity extends AppCompatActivity {
         if (extras != null) {
             mUserName.setText(extras.getString("username"));
         }
-    }
-
-
-    public void onChancgeProfilePhoto(){
-        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
 }

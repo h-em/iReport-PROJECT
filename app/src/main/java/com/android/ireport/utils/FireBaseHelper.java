@@ -1,17 +1,24 @@
 package com.android.ireport.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.ireport.R;
+import com.android.ireport.activity.MainActivity;
 import com.android.ireport.model.Photo;
 import com.android.ireport.model.Report;
 import com.android.ireport.model.User;
 import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -219,7 +226,7 @@ public class FireBaseHelper {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         List<Report> reports = new ArrayList<>();
-        if(currentUser != null) {
+        if (currentUser != null) {
             for (DataSnapshot ds : dataSnapshot.child("user_reports")
                     .child(currentUser.getUid()).getChildren()) {
                 Log.d(TAG, "getUserReports(): report: " + ds);
@@ -274,55 +281,106 @@ public class FireBaseHelper {
         return count;
     }
 
+    public void uploadPhoto(String imageUrl) {
+        FilePaths filePaths = new FilePaths();
+
+        Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo for user profile.");
+
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        StorageReference storageReference = mStorageReference
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
+
+        Bitmap bitmap = ImageManager.getBitmap(imageUrl);
+        byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
+
+        UploadTask uploadTask;
+        uploadTask = storageReference.putBytes(bytes);
+
+        //get image link from firebase
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+            Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
+
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    String firebaseImageUrl = uri.toString();
+
+                    //inset photo in users_account
+                    setProfilePhoto(firebaseImageUrl);
+
+                    //navigate to the main page
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+
+        }).addOnFailureListener(e -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
+            Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
+
+        }).addOnProgressListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
+            double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+            if (progress - 15 > mPhotoUploadProgress) {
+                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                mPhotoUploadProgress = progress;
+            }
+            Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
+        });
+    }
+
+
     public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o, String longitude, String latitude) {
+        Log.d(TAG, "uploadNewReport: Upload new report and photo.");
 
         FilePaths filePaths = new FilePaths();
-        if (photoType.equals("new_photo")) {
-            Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo.");
 
-            String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            StorageReference storageReference = mStorageReference
-                    .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        StorageReference storageReference = mStorageReference
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
 
-            Bitmap bitmap = ImageManager.getBitmap(imageUrl);
-            byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
+        Bitmap bitmap = ImageManager.getBitmap(imageUrl);
+        byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
 
-            UploadTask uploadTask;
-            uploadTask = storageReference.putBytes(bytes);
+        UploadTask uploadTask;
+        uploadTask = storageReference.putBytes(bytes);
 
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+        //add image into FireStore
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+            Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
 
-                Uri firebaseImageUrl = taskSnapshot.getUploadSessionUri();
-                Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
+            //get image link from firebase
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    String firebaseUrl = uri.toString();
 
-                //inset report and photo in db
-                addReportToDatabase(latitude, longitude, reportDescription, firebaseImageUrl.toString());
+                    //inset report and photo in db
+                    addReportToDatabase(latitude, longitude, reportDescription, firebaseUrl);
 
-                //navigate to the main page
-
-            }).addOnFailureListener(e -> {
-                Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
-                Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
-
-            }).addOnProgressListener(taskSnapshot -> {
-                Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
-                double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-                if (progress - 15 > mPhotoUploadProgress) {
-                    Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
-                    mPhotoUploadProgress = progress;
+                    //navigate to the main page
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    mContext.startActivity(intent);
                 }
-                Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
             });
-        } else if (photoType.equals("user_profile_photo)")) {
-            Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo for user profile.");
-            String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            StorageReference storageReference = mStorageReference
-                    .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "user_profile_photo");
+        }).addOnFailureListener(e -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
+            Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
 
-        }
+        }).addOnProgressListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
+            double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+            if (progress - 15 > mPhotoUploadProgress) {
+                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                mPhotoUploadProgress = progress;
+            }
+            Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
+        });
     }
 
     public Photo addPhotoToDatabase(String downloadUrl) {
@@ -340,6 +398,15 @@ public class FireBaseHelper {
         mReference.child("photos").child(newPhotoKey).setValue(photo);
 
         return photo;
+    }
+
+    private void setProfilePhoto(String imageUrl) {
+        Log.d(TAG, "setProfilePhoto: set user profile photo: " + imageUrl);
+
+        mReference.child("users_account")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("profile_photo")
+                .setValue(imageUrl);
     }
 
 

@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.ireport.R;
+import com.android.ireport.activity.EditProfileActivity;
 import com.android.ireport.adapter.GridImgAdapter;
 import com.android.ireport.utils.FilePaths;
 import com.android.ireport.utils.FileSearch;
@@ -28,6 +29,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GalleryFragment extends Fragment {
     private static final String TAG = "GalleryFragment";
@@ -38,6 +40,7 @@ public class GalleryFragment extends Fragment {
     private ImageView mGalleryImage;
     private ProgressBar mProgressBar;
     private Spinner mDirectorySpinner;
+    private TextView mNextScreen;
 
     private List<String> directories;
     private String mAppend = "file:/";
@@ -63,8 +66,8 @@ public class GalleryFragment extends Fragment {
         onClickToCloseTheFragment(closeFragment);
 
         //go to the next screen
-        TextView nextScreen = view.findViewById(R.id.next_activity_textView);
-        goToNextScreen(nextScreen);
+        mNextScreen = view.findViewById(R.id.next_activity_textView);
+        goToNextScreen(mNextScreen);
 
         init();
 
@@ -83,21 +86,20 @@ public class GalleryFragment extends Fragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: navigating to the final share screen.");
 
-
-                //if(isRootTask()){
-                //send an intent to start NextActivity + extra image
-                Intent intent = new Intent(getActivity(), NextActivity.class);
-                intent.putExtra("selected_image", mSelectedImage);
-                startActivity(intent);
-                    /*
-                }else{
-                /*
-                    Intent intent = new Intent(getActivity(), AccountSettingsActivity.class);
+                if (isRootTask()) {
+                    //send an intent to start NextActivity + extra image
+                    Intent intent = new Intent(getActivity(), NextActivity.class);
                     intent.putExtra("selected_image", mSelectedImage);
-                    intent.putExtra(getString(R.string.return_to_fragment), getString(R.string.edit_profile_fragment));
+                    startActivity(intent);
+
+                } else {
+
+                    Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                    intent.putExtra("selected_image", mSelectedImage);
+                    intent.putExtra("return_to_activity", "edit_profile_activity");
                     startActivity(intent);
                     getActivity().finish();
-                }*/
+                }
 
             }
         });
@@ -116,9 +118,9 @@ public class GalleryFragment extends Fragment {
 
     private boolean isRootTask() {
         if (((CameraActivity) getActivity()).getTask() == 0) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -157,7 +159,8 @@ public class GalleryFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 

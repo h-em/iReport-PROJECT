@@ -14,4 +14,5 @@ public class Constatnts {
     public static final String REPORT_LIST_KEY = "reports_list_key";
 
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    public static final int REQUEST_CODE_CHANGE_PHOTO = 2;
 }

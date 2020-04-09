@@ -34,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize FireBase stuff
         mAuth = FirebaseAuth.getInstance();
         mFireBaseHelper = new FireBaseHelper(mContext);
+        //mAuth.signOut();
         firebaseAuthSetup();
 
         //create ImageLoader Object
@@ -162,19 +164,19 @@ public class MainActivity extends AppCompatActivity {
         //get list from shared preferences
         List<Report> reports = Utils.getReportsList(mContext);
         Log.d(TAG, "initRecyclerView(): reports: " + reports);
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(reports, mContext, getSupportFragmentManager());
-        if (adapter.getItemCount() > 0) {
-            mNoReportText.setVisibility(View.GONE);
-        }else{
-            mNoReportText.setVisibility(View.VISIBLE);
-        }
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.setAdapter(adapter);
+       // if(reports != null){
+            RecyclerView recyclerView = findViewById(R.id.recycler_view);
+            RecycleViewAdapter adapter = new RecycleViewAdapter(reports, mContext, getSupportFragmentManager());
+            if (adapter.getItemCount() > 0) {
+                mNoReportText.setVisibility(View.GONE);
+            }else{
+                mNoReportText.setVisibility(View.VISIBLE);
+            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            recyclerView.setAdapter(adapter);
+       // }
 
     }
-
 
     private void checkCurrentUser(FirebaseUser user) {
         Log.d(TAG, "checkCurrentUser: checking if user is logged in.");
@@ -206,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
-
 
     @Override
     protected void onPause() {
