@@ -58,8 +58,6 @@ public class NextActivity extends AppCompatActivity {
 
     private String mAppend = "file:/";
     private int imageCount = 0;
-    private String imgUrl;
-    private Bitmap bitmap;
     private Intent intent;
 
     @SuppressLint("MissingPermission")
@@ -74,8 +72,6 @@ public class NextActivity extends AppCompatActivity {
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
 
         mDetails = findViewById(R.id.report_details_next_activity);
-
-
 
         setupFirebaseAuth();
 
@@ -96,29 +92,32 @@ public class NextActivity extends AppCompatActivity {
                 Toast.makeText(NextActivity.this, "Attempting to upload new photo", Toast.LENGTH_SHORT).show();
                 String reportDescription = mDetails.getText().toString();
 
-                if (intent.hasExtra("selected_image")) {
-                    imgUrl = intent.getStringExtra("selected_image");
+                // check if user has permission to access location
+                if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(NextActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            Constatnts.REQUEST_CODE_LOCATION_PERMISSION);
+                }else{
+                    //get current location
+                    getCurrentLocation();
+                }
+                String latitude = Utils.getLatitude(mContext);
+                String longitude = Utils.getLongitude(mContext);
 
+                // if the image comes from GalleryFragment with extra imageUrl
+                if (intent.hasExtra(getString(R.string.selected_image))) {
+                    String imgUrl = intent.getStringExtra(getString(R.string.selected_image));
 
-                    if(ContextCompat.checkSelfPermission(getApplicationContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(NextActivity.this,
-                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                Constatnts.REQUEST_CODE_LOCATION_PERMISSION);
-                    }else{
-                        getCurrentLocation();
-                    }
-                    String latitude = Utils.getLatitude(mContext);
-                    String longitude = Utils.getLongitude(mContext);
-
-                    mFirebaseHelper.uploadNewReportAndPhoto("new_photo", reportDescription,
+                    mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.new_photo), reportDescription,
                             imageCount, imgUrl, null, latitude, longitude);
                 }
-                /*
+                // if the image comes from PhotoFragment with extra bitmap
                 else if(intent.hasExtra(getString(R.string.selected_bitmap))){
-                    bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
-                    mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
-                }*/
+                    Bitmap bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
+                    mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.selected_bitmap), reportDescription,
+                            imageCount, bitmap,null, latitude, longitude);
+                }
 
                 //small delay(it gives time for images to update into firebase)
                 new Handler().postDelayed(() -> {
@@ -159,16 +158,15 @@ public class NextActivity extends AppCompatActivity {
         ImageView image = findViewById(R.id.image_taken);
 
         if (intent.hasExtra("selected_image")) {
-            imgUrl = intent.getStringExtra("selected_image");
+            String imgUrl = intent.getStringExtra("selected_image");
             Log.d(TAG, "setImage: got new image url: " + imgUrl);
             UniversalImageLoader.setImage(imgUrl, image, null, mAppend);
         }
-        /*
         else if(intent.hasExtra(getString(R.string.selected_bitmap))){
-            bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
+            Bitmap bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
             Log.d(TAG, "setImage: got new bitmap");
             image.setImageBitmap(bitmap);
-        }*/
+        }
     }
 
 

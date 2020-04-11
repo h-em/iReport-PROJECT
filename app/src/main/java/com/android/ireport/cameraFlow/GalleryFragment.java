@@ -92,14 +92,14 @@ public class GalleryFragment extends Fragment {
                 if (isRootTask()) {
                     //send an intent to start NextActivity + extra image
                     Intent intent = new Intent(getActivity(), NextActivity.class);
-                    intent.putExtra("selected_image", mSelectedImage);
+                    intent.putExtra(getString(R.string.selected_image), mSelectedImage);
                     startActivity(intent);
 
                 } else {
                     //send intent to the EditProfileActivity + selected image
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                    intent.putExtra("selected_image", mSelectedImage);
-                    intent.putExtra("return_to_activity", "edit_profile_activity");
+                    intent.putExtra(getString(R.string.selected_image), mSelectedImage);
+                    intent.putExtra(getString(R.string.return_to_activity), getString(R.string.edit_profile_activity));
                     startActivity(intent);
                     Objects.requireNonNull(getActivity()).finish();
                 }
@@ -120,13 +120,11 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-
     private boolean isRootTask() {
         if (((CameraActivity) getActivity()).getTask() == 0) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private void init() {

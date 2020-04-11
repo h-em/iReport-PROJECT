@@ -2,6 +2,7 @@ package com.android.ireport.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,7 +63,6 @@ public class EditProfileActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
 
 
-
         setUsernameEditText();
         onPressBackArrow();
         saveEditedDetails();
@@ -89,12 +89,16 @@ public class EditProfileActivity extends AppCompatActivity {
     private void getIncomingIntentFromGalleryFragment() {
         Intent intent = getIntent();
 
-        if (intent.hasExtra("selected_image")) {
-            if (intent.hasExtra("return_to_activity")) {
-                //set the new profile pictures
-                String imageUrl = intent.getStringExtra("selected_image");
+        if (intent.hasExtra(getString(R.string.return_to_activity))) {
+            if (intent.hasExtra(getString(R.string.selected_image))) {
+                //set the new profile pictures by imageUrl
+                String imageUrl = intent.getStringExtra(getString(R.string.selected_image));
                 mFirebaseHelper.uploadProfilePhotoOnly(imageUrl);
-                //finish();
+
+            } else if (intent.hasExtra(getString(R.string.selected_bitmap))) {
+                //set profile pictures by bitmap
+                Bitmap bitmap = intent.getParcelableExtra(getString(R.string.selected_bitmap));
+                mFirebaseHelper.uploadProfilePhotoOnly(bitmap);
             }
         }
     }
@@ -128,7 +132,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) { }
-        }); }
+        });
+    }
 
     public void saveEditedDetails() {
         mSaveLayout.setOnClickListener(new View.OnClickListener() {

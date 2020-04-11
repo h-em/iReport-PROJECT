@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
 import com.android.ireport.login.LoginActivity;
-import com.android.ireport.model.Report;
 import com.android.ireport.model.User;
 import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
@@ -24,7 +23,6 @@ import com.android.ireport.utils.BottomNavigationHelper;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.android.ireport.utils.Utils;
-import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collections;
-import java.util.List;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -131,7 +128,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 UserExtras userExtras = mFirebaseHelper.getUserExtras(dataSnapshot, userUid);
@@ -142,7 +139,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
 
@@ -175,17 +172,19 @@ public class ProfileActivity extends AppCompatActivity {
                 //set user profile
                 setProfileDetails(userData);
 
-                //get numbers from db
-                mReportsNumber.setText(Integer.toString(mFirebaseHelper.getNumberOfUserReports(dataSnapshot)));
+                //get reports numbers from db
+                String reportsNumbers = Integer.toString(mFirebaseHelper.getNumberOfUserReports(dataSnapshot));
+                mReportsNumber.setText(reportsNumbers);
                 Log.d(TAG, "onDataChange: mReportsNumber: " + mReportsNumber.toString());
-                mResolvedReportsNumber.setText(Integer.toString(mFirebaseHelper.getNumberOfResolvedUserReports(dataSnapshot)));
+
+                //get resolved reports numbers from db
+                String resolvedReportsNumbers = Integer.toString(mFirebaseHelper.getNumberOfResolvedUserReports(dataSnapshot));
+                mResolvedReportsNumber.setText(resolvedReportsNumbers);
                 Log.d(TAG, "onDataChange: mResolvedReportsNumber: " + mResolvedReportsNumber.toString());
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
@@ -200,11 +199,6 @@ public class ProfileActivity extends AppCompatActivity {
         mUsername.setText(user.getUsername());
         mReportsNumber.setText(userExtras.getReports_nr() + "");
         mResolvedReportsNumber.setText(userExtras.getResolved_reports_nr() + "");
-
-    }
-
-
-    public void setNumber(int number) {
 
     }
 

@@ -386,8 +386,6 @@ public class FireBaseHelper {
     }
 
 
-
-
     public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o, String longitude, String latitude) {
         Log.d(TAG, "uploadNewReport: Upload new report and photo.");
 
@@ -438,6 +436,57 @@ public class FireBaseHelper {
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
         });
     }
+
+    public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, Bitmap bitmap, Object o, String longitude, String latitude) {
+        Log.d(TAG, "uploadNewReport: Upload new report and photo.");
+
+        //save the photos into a specific director from firebase store
+        FilePaths filePaths = new FilePaths();
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        StorageReference storageReference = mStorageReference
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
+
+        byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
+
+        UploadTask uploadTask;
+        uploadTask = storageReference.putBytes(bytes);
+
+        //add image into FireStore
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+            Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
+
+            //get image link from firebase
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    String firebaseUrl = uri.toString();
+
+                    //inset report and photo in db
+                    addReportToDatabase(latitude, longitude, reportDescription, firebaseUrl);
+
+                    //navigate to the main page
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+
+        }).addOnFailureListener(e -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
+            Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
+
+        }).addOnProgressListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
+            double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+            if (progress - 15 > mPhotoUploadProgress) {
+                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                mPhotoUploadProgress = progress;
+            }
+            Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
+        });
+    }
+
 
     public Photo addPhotoToDatabase(String downloadUrl) {
         Log.d(TAG, "addPhotoToDatabase: adding photo to database");
@@ -496,20 +545,52 @@ public class FireBaseHelper {
         mReference.child("user_reports").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(newReportKey).setValue(report);
     }
 
+    public void uploadProfilePhotoOnly(Bitmap bitmap) {
+        FilePaths filePaths = new FilePaths();
 
-    // e nefolosita momentan
-/*
-    private String setStatus(String status) {
-        Log.d(TAG, "setStatus: set status.");
+        Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo for user profile.");
 
-        String current_status = "undefined";
-        if (status.equalsIgnoreCase("new")) {
-            current_status = "new";
-        } else if (status.equalsIgnoreCase("in progress")) {
-            current_status = "in progress";
-        } else if (status.equalsIgnoreCase("done")) {
-            current_status = "done";
-        }
-        return current_status;
-    }*/
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        StorageReference storageReference = mStorageReference
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
+
+        byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
+
+        UploadTask uploadTask;
+        uploadTask = storageReference.putBytes(bytes);
+
+        //get image link from firebase
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+            Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
+
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    String firebaseImageUrl = uri.toString();
+
+                    //inset photo in users_account
+                    setProfilePhoto(firebaseImageUrl);
+
+                    //navigate to the main page
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+
+        }).addOnFailureListener(e -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
+            Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
+
+        }).addOnProgressListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
+            double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+            if (progress - 15 > mPhotoUploadProgress) {
+                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                mPhotoUploadProgress = progress;
+            }
+            Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
+        });
+    }
 }

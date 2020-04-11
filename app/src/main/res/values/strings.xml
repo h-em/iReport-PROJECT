@@ -6,5 +6,10 @@
 
     <string name="users_node_name">users</string>
     <string name="users_account_node_name">users_account </string>
+    <string name="selected_bitmap">selected_bitmap</string>
+    <string name="return_to_activity">return_to_activity</string>
+    <string name="selected_image">selected_image</string>
+    <string name="edit_profile_activity">edit_profile_activity</string>
+    <string name="new_photo">new_photo</string>
 
 </resources>
