@@ -139,9 +139,6 @@ public class ProfileActivity extends AppCompatActivity {
                 String imageURL = userExtras.getProfile_photo();
 
                 UniversalImageLoader.setImage(imageURL, mProfilePhoto, mProgressBar, "");
-                /*Glide.with(mContext)
-                        .load(imageURL)
-                        .into(mProfilePhoto);*/
             }
 
             @Override

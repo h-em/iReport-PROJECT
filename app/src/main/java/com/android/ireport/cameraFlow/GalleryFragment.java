@@ -1,5 +1,6 @@
 package com.android.ireport.cameraFlow;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -15,11 +16,13 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.android.ireport.R;
 import com.android.ireport.activity.EditProfileActivity;
+import com.android.ireport.activity.MainActivity;
 import com.android.ireport.adapter.GridImgAdapter;
 import com.android.ireport.utils.FilePaths;
 import com.android.ireport.utils.FileSearch;
@@ -93,16 +96,16 @@ public class GalleryFragment extends Fragment {
                     startActivity(intent);
 
                 } else {
-
+                    //send intent to the EditProfileActivity + selected image
                     Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                     intent.putExtra("selected_image", mSelectedImage);
                     intent.putExtra("return_to_activity", "edit_profile_activity");
                     startActivity(intent);
-                    getActivity().finish();
+                    Objects.requireNonNull(getActivity()).finish();
                 }
-
             }
         });
+
     }
 
     private void onClickToCloseTheFragment(ImageView closeFragment) {
@@ -110,6 +113,8 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: closing the gallery fragment.");
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
                 getActivity().finish();
             }
         });
@@ -118,9 +123,9 @@ public class GalleryFragment extends Fragment {
 
     private boolean isRootTask() {
         if (((CameraActivity) getActivity()).getTask() == 0) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 

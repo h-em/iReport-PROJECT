@@ -28,6 +28,7 @@ public class BottomNavigationHelper {
                         break;
                     case R.id.menu_item_camera:
                         Intent cameraIntent = new Intent(context, CameraActivity.class);
+                        cameraIntent.putExtra(Constatnts.CAMERA_FLAG,0);
                         context.startActivity(cameraIntent);
                         callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;

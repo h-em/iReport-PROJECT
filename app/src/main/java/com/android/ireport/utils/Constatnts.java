@@ -15,4 +15,7 @@ public class Constatnts {
 
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     public static final int REQUEST_CODE_CHANGE_PHOTO = 2;
+
+    public static final String CAMERA_FLAG = "camera_flag_0";
+
 }

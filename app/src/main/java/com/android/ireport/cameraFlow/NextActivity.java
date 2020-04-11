@@ -52,10 +52,10 @@ public class NextActivity extends AppCompatActivity {
     private DatabaseReference myRef;
     private FireBaseHelper mFirebaseHelper;
 
-    private EditText mDetails;
     private Context mContext;
+    private EditText mDetails;
 
-    //vars
+
     private String mAppend = "file:/";
     private int imageCount = 0;
     private String imgUrl;
@@ -75,18 +75,18 @@ public class NextActivity extends AppCompatActivity {
 
         mDetails = findViewById(R.id.report_details_next_activity);
 
+
+
         setupFirebaseAuth();
 
-        ImageView backArrow = findViewById(R.id.back_arrow_icon_from_next_activity);
-        backArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: closing the activity");
-                finish();
-            }
-        });
+        onClickBackArrow();
 
+        onClickSendButton();
 
+        setImage();
+    }
+
+    private void onClickSendButton() {
         TextView send = findViewById(R.id.send_textView);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,32 +100,27 @@ public class NextActivity extends AppCompatActivity {
                     imgUrl = intent.getStringExtra("selected_image");
 
 
-                    if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                                != PackageManager.PERMISSION_GRANTED){
+                    if(ContextCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
                         ActivityCompat.requestPermissions(NextActivity.this,
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                 Constatnts.REQUEST_CODE_LOCATION_PERMISSION);
                     }else{
                         getCurrentLocation();
                     }
-
-
                     String latitude = Utils.getLatitude(mContext);
                     String longitude = Utils.getLongitude(mContext);
 
-
-
-                    mFirebaseHelper.uploadNewReportAndPhoto("new_photo", reportDescription, imageCount, imgUrl, null, latitude, longitude);
+                    mFirebaseHelper.uploadNewReportAndPhoto("new_photo", reportDescription,
+                            imageCount, imgUrl, null, latitude, longitude);
                 }
                 /*
                 else if(intent.hasExtra(getString(R.string.selected_bitmap))){
                     bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
                     mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.new_photo), caption, imageCount, null,bitmap);
-                }
+                }*/
 
-*/
-
-                //small delay
+                //small delay(it gives time for images to update into firebase)
                 new Handler().postDelayed(() -> {
                     Intent gotToHome = new Intent(mContext, MainActivity.class);
                     startActivity(gotToHome);
@@ -134,8 +129,17 @@ public class NextActivity extends AppCompatActivity {
             }
 
         });
+    }
 
-        setImage();
+    private void onClickBackArrow() {
+        ImageView backArrow = findViewById(R.id.back_arrow_icon_from_next_activity);
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: closing the activity");
+                finish();
+            }
+        });
     }
 
     @Override
@@ -197,11 +201,8 @@ public class NextActivity extends AppCompatActivity {
                 imageCount = mFirebaseHelper.getNumberOfUserReports(dataSnapshot);
                 Log.d(TAG, "onDataChange: image count: " + imageCount);
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
     }
 

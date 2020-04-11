@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.android.ireport.R;
 import com.android.ireport.activity.MainActivity;
+import com.android.ireport.activity.ProfileActivity;
 import com.android.ireport.model.Photo;
 import com.android.ireport.model.Report;
 import com.android.ireport.model.User;
@@ -332,11 +334,65 @@ public class FireBaseHelper {
     }
 
 
+
+    public void uploadProfilePhotoOnly(String imageUrl) {
+        FilePaths filePaths = new FilePaths();
+
+        Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo for user profile.");
+
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        StorageReference storageReference = mStorageReference
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
+
+        Bitmap bitmap = ImageManager.getBitmap(imageUrl);
+        byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
+
+        UploadTask uploadTask;
+        uploadTask = storageReference.putBytes(bytes);
+
+        //get image link from firebase
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+            Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
+
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    String firebaseImageUrl = uri.toString();
+
+                    //inset photo in users_account
+                    setProfilePhoto(firebaseImageUrl);
+
+                    //navigate to the main page
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+
+        }).addOnFailureListener(e -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
+            Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
+
+        }).addOnProgressListener(taskSnapshot -> {
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
+            double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+            if (progress - 15 > mPhotoUploadProgress) {
+                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                mPhotoUploadProgress = progress;
+            }
+            Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
+        });
+    }
+
+
+
+
     public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o, String longitude, String latitude) {
         Log.d(TAG, "uploadNewReport: Upload new report and photo.");
 
+        //save the photos into a specific director from firebase store
         FilePaths filePaths = new FilePaths();
-
         String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference storageReference = mStorageReference
                 .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
@@ -386,7 +442,6 @@ public class FireBaseHelper {
     public Photo addPhotoToDatabase(String downloadUrl) {
         Log.d(TAG, "addPhotoToDatabase: adding photo to database");
 
-
         //creez id-ul( random string)  si il iau din db
         String newPhotoKey = mReference.child("photos").push().getKey();
         //creez obiectul
@@ -422,10 +477,9 @@ public class FireBaseHelper {
         // set photo into "photos" node and generate a random id for it
         Photo photo = addPhotoToDatabase(downloadUrl);
 
-
         //creez id-ul(random string) si il iau din db
         String newReportKey = mReference.child("reports").push().getKey();
-        //creez obiectul
+        //creez obiectul report
         Report report = new Report();
         report.setCurrent_date(getTimeStamp());
         report.setDetails(details);
@@ -433,6 +487,7 @@ public class FireBaseHelper {
         report.setLongitude(longitude);
         report.setStatus("new");
         report.setPhoto(photo);
+        report.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         //insert in nodul "reports" -- DONE
         mReference.child("reports").child(newReportKey).setValue(report);

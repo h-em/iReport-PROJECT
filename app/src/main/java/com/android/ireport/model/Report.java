@@ -17,6 +17,7 @@ public class Report {
     private String longitude;
     private String status;
     private Photo photo;
+    private String user_id;
 
 
 
@@ -27,5 +28,6 @@ public class Report {
         this.longitude = report.getLongitude();
         this.status = report.getStatus();
         this.photo = report.getPhoto();
+        this.user_id = report.user_id;
     }
 }

@@ -8,18 +8,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
 import com.android.ireport.cameraFlow.CameraActivity;
+import com.android.ireport.model.UserExtras;
 import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class EditProfileActivity extends AppCompatActivity {
     private static final String TAG = "EditProfileActivity";
@@ -29,14 +34,13 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText mUserName;
     private RelativeLayout mSaveLayout;
     private Button mChangePhoto;
-    private String finalUsername;
+    private ProgressBar mProgressBar;
 
     //firebase
     private FirebaseAuth mAuth;
     //private FirebaseAuth.AuthStateListener mAuthStateListener;
     private DatabaseReference mReference;
     private FireBaseHelper mFirebaseHelper;
-    private String userId;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +58,10 @@ public class EditProfileActivity extends AppCompatActivity {
         mUserName = findViewById(R.id.edit_username_editView);
         mSaveLayout = findViewById(R.id.save_btn);
         mChangePhoto = findViewById(R.id.change_photo_button);
+        mProgressBar = findViewById(R.id.progresbar_edit_profile_activity);
+        mProgressBar.setVisibility(View.GONE);
 
-        userId = mAuth.getCurrentUser().getUid();
+
 
         setUsernameEditText();
         onPressBackArrow();
@@ -63,10 +69,9 @@ public class EditProfileActivity extends AppCompatActivity {
         //set the image
         setUserProfileImage();
 
-        getIncomingIntent();
+        getIncomingIntentFromGalleryFragment();
 
         changeProfilePhoto();
-
     }
 
     private void changeProfilePhoto() {
@@ -81,15 +86,15 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void getIncomingIntent() {
+    private void getIncomingIntentFromGalleryFragment() {
         Intent intent = getIntent();
 
         if (intent.hasExtra("selected_image")) {
             if (intent.hasExtra("return_to_activity")) {
                 //set the new profile pictures
                 String imageUrl = intent.getStringExtra("selected_image");
-                mFirebaseHelper.uploadPhoto(imageUrl);
-                finish();
+                mFirebaseHelper.uploadProfilePhotoOnly(imageUrl);
+                //finish();
             }
         }
     }
@@ -109,10 +114,21 @@ public class EditProfileActivity extends AppCompatActivity {
     public void setUserProfileImage() {
         Log.d(TAG, "setUserProfileImage: setting profile image.");
 
-        String imageURL = "https://tinyjpg.com/images/social/website.jpg";
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        UniversalImageLoader.setImage(imageURL, mProfilePhoto, null, "");
-    }
+                String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                UserExtras userExtras = mFirebaseHelper.getUserExtras(dataSnapshot, userUid);
+
+                String imageURL = userExtras.getProfile_photo();
+
+                UniversalImageLoader.setImage(imageURL, mProfilePhoto, mProgressBar, "");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        }); }
 
     public void saveEditedDetails() {
         mSaveLayout.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +138,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 Log.d(TAG, "saveEditedDetails: -------------->username: " + username);
 
                 mFirebaseHelper.updateUsername(username);
+                finish();
             }
         });
     }

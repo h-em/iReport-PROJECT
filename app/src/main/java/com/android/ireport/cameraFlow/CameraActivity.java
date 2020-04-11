@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.android.ireport.R;
+import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.Permissions;
 import com.google.android.material.tabs.TabLayout;
 
@@ -36,6 +37,18 @@ public class CameraActivity extends AppCompatActivity {
         mContext = CameraActivity.this;
 
         askForPermission();
+
+        //set flag  -> it depends were the intent is came from
+        setFlag();
+    }
+
+    private void setFlag() {
+        if(getIntent().hasExtra(Constatnts.CAMERA_FLAG)){
+            Log.d(TAG, "setFlag(): set Flag to 0.");
+            getIntent().setFlags(0);
+        }else{
+            Log.d(TAG, "setFlag(): flag: " + getIntent().getFlags());
+        }
     }
 
     private void askForPermission() {
