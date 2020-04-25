@@ -15,9 +15,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
-import com.android.ireport.cameraFlow.CameraActivity;
 import com.android.ireport.model.UserExtras;
-import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;

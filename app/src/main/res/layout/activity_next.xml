@@ -45,9 +45,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/image_taken"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="20dp"
-                android:text="Location"
-                android:textAlignment="center"/>
+                android:layout_marginTop="20dp"/>
+                <!--android:text="Location"
+                android:textAlignment="center"-->
 
         </RelativeLayout>
     </RelativeLayout>

@@ -25,9 +25,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circleImageView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="80dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +66,7 @@
                     android:minHeight="0dp"
                     android:includeFontPadding="false"
                     android:text="Edit Profile"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -82,7 +82,7 @@
 
                 <LinearLayout
                     android:id="@+id/number_of_reports_layout"
-                    android:layout_width="170dp"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:gravity="center"
@@ -102,12 +102,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Your reports"
-                        android:textSize="15sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/number_of_resolved_reports_layout"
-                    android:layout_width="170dp"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -126,7 +126,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Resolved reports"
-                        android:textSize="15sp" />
+                        android:textSize="13sp"
+                        android:maxLines="1"/>
                 </LinearLayout>
 
 
@@ -151,7 +152,7 @@
                     android:minHeight="0dp"
                     android:includeFontPadding="false"
                     android:text="Logout"
-                    android:textSize="15sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
 
@@ -173,8 +174,9 @@
             android:id="@+id/profile_progressbar"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"/>
+            android:layout_marginTop="50dp" />
 
     </RelativeLayout>
 

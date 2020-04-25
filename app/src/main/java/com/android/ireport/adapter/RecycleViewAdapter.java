@@ -46,7 +46,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        holder.date.setText("Date: " + mUserReports.get(position).getCurrent_date());
+        holder.date.setText(/*"Date: " + */mUserReports.get(position).getCurrent_date());
         holder.latitude.setText("Latitude: " + mUserReports.get(position).getLatitude());
         holder.longitude.setText("Longitude: " + mUserReports.get(position).getLongitude());
         //holder.reportDetails.setText("Details: " + mUserReports.get(position).getDetails());
@@ -81,7 +81,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             //reportDetails = itemView.findViewById(R.id.item_details_report);
             date = itemView.findViewById(R.id.item_date);
             latitude = itemView.findViewById(R.id.item_latitude_report);
+            //latitude.setVisibility(View.GONE);
             longitude = itemView.findViewById(R.id.item_longitude_report);
+            //longitude.setVisibility(View.GONE);
             image = itemView.findViewById(R.id.image_report_item_report);
             status = itemView.findViewById(R.id.status_report);
             parentLayout = itemView.findViewById(R.id.parent_layout);

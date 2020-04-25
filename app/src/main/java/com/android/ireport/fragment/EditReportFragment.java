@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.android.ireport.R;
 
-public class EditReportFragment<onBackPressed> extends Fragment {
+public class EditReportFragment extends Fragment {
     private static final String TAG = "EditReportFragment";
 
     ImageView backArrow;
@@ -64,14 +64,9 @@ public class EditReportFragment<onBackPressed> extends Fragment {
         });
     }
 
-    public void onEditPress(){
-        editReport.setOnClickListener((v)->{
+    public void onEditPress() {
+        editReport.setOnClickListener((v) -> {
             //open new dialog or fragment to edit details section
         });
     }
-
-    public void editDetails(){
-        //
-    }
-
 }

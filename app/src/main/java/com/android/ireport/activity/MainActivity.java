@@ -164,17 +164,18 @@ public class MainActivity extends AppCompatActivity {
         //get list from shared preferences
         List<Report> reports = Utils.getReportsList(mContext);
         Log.d(TAG, "initRecyclerView(): reports: " + reports);
-       // if(reports != null){
-            RecyclerView recyclerView = findViewById(R.id.recycler_view);
-            RecycleViewAdapter adapter = new RecycleViewAdapter(reports, mContext, getSupportFragmentManager());
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        RecycleViewAdapter adapter = new RecycleViewAdapter(reports, mContext, getSupportFragmentManager());
+        if (reports != null) {
+
             if (adapter.getItemCount() > 0) {
                 mNoReportText.setVisibility(View.GONE);
-            }else{
+            } else {
                 mNoReportText.setVisibility(View.VISIBLE);
             }
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             recyclerView.setAdapter(adapter);
-       // }
+        }
 
     }
 

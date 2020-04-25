@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 
 import com.android.ireport.R;
-import com.android.ireport.cameraFlow.CameraActivity;
+import com.android.ireport.activity.CameraActivity;
 import com.android.ireport.activity.MainActivity;
 import com.android.ireport.activity.ProfileActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

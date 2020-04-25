@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
 
     <uses-permission android:name="android.hardware.camera2.full"/>
 
@@ -32,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".cameraFlow.CameraActivity"
+        <activity android:name=".activity.CameraActivity"
             android:launchMode="singleTask"
             />
         <activity android:name=".activity.ProfileActivity"
@@ -41,7 +42,7 @@
         <activity android:name=".activity.EditProfileActivity"/>
         <activity android:name=".login.LoginActivity"/>
         <activity android:name=".login.RegisterActivity"/>
-        <activity android:name=".cameraFlow.NextActivity"
+        <activity android:name=".activity.NextActivity"
             android:windowSoftInputMode="adjustPan"
         />
 
