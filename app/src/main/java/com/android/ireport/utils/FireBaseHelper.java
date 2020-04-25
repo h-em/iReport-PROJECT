@@ -261,8 +261,11 @@ public class FireBaseHelper {
 
         for (DataSnapshot ds : dataSnapshot
                 .child("user_reports")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getChildren()) {
-
+                .child(FirebaseAuth
+                        .getInstance()
+                        .getCurrentUser()
+                        .getUid())
+                .getChildren()) {
             count++;
         }
         return count;
@@ -283,7 +286,7 @@ public class FireBaseHelper {
         return count;
     }
 
-    public void uploadPhoto(String imageUrl) {
+   /* public void uploadPhoto(String imageUrl) {
         FilePaths filePaths = new FilePaths();
 
         Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo for user profile.");
@@ -326,12 +329,13 @@ public class FireBaseHelper {
             double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
             if (progress - 15 > mPhotoUploadProgress) {
-                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "photo upload progress: "
+                        + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                 mPhotoUploadProgress = progress;
             }
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
         });
-    }
+    }*/
 
 
 
@@ -352,7 +356,8 @@ public class FireBaseHelper {
 
         //get image link from firebase
         uploadTask.addOnSuccessListener(taskSnapshot -> {
-            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
+            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: "
+                    + taskSnapshot.toString());
             Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
 
             storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -378,7 +383,8 @@ public class FireBaseHelper {
             double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
             if (progress - 15 > mPhotoUploadProgress) {
-                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "photo upload progress: "
+                        + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                 mPhotoUploadProgress = progress;
             }
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
@@ -386,7 +392,8 @@ public class FireBaseHelper {
     }
 
 
-    public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, String imageUrl, Object o, String longitude, String latitude) {
+    public void uploadNewReportAndPhoto(String reportDescription, int imageCount, String imageUrl,
+                                        String latitude, String longitude) {
         Log.d(TAG, "uploadNewReport: Upload new report and photo.");
 
         //save the photos into a specific director from firebase store
@@ -430,14 +437,16 @@ public class FireBaseHelper {
             double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
             if (progress - 15 > mPhotoUploadProgress) {
-                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "photo upload progress: "
+                        + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                 mPhotoUploadProgress = progress;
             }
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
         });
     }
 
-    public void uploadNewReportAndPhoto(String photoType, String reportDescription, int imageCount, Bitmap bitmap, Object o, String longitude, String latitude) {
+    public void uploadNewReportAndPhoto(String reportDescription, int imageCount, Bitmap bitmap,
+                                        String latitude, String longitude) {
         Log.d(TAG, "uploadNewReport: Upload new report and photo.");
 
         //save the photos into a specific director from firebase store
@@ -480,7 +489,8 @@ public class FireBaseHelper {
             double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
             if (progress - 15 > mPhotoUploadProgress) {
-                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "photo upload progress: "
+                        + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                 mPhotoUploadProgress = progress;
             }
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
@@ -542,7 +552,8 @@ public class FireBaseHelper {
         mReference.child("reports").child(newReportKey).setValue(report);
 
         //insert in nodul de user_reports in functie de id_ul userului curent -- DONE
-        mReference.child("user_reports").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(newReportKey).setValue(report);
+        mReference.child("user_reports").child(FirebaseAuth.getInstance().getCurrentUser()
+                .getUid()).child(newReportKey).setValue(report);
     }
 
     public void uploadProfilePhotoOnly(Bitmap bitmap) {
@@ -587,7 +598,8 @@ public class FireBaseHelper {
             double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
             if (progress - 15 > mPhotoUploadProgress) {
-                Toast.makeText(mContext, "photo upload progress: " + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "photo upload progress: "
+                        + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
                 mPhotoUploadProgress = progress;
             }
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);

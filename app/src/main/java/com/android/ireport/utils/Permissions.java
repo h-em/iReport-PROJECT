@@ -29,5 +29,4 @@ public class Permissions {
             Manifest.permission.ACCESS_FINE_LOCATION,
     };
 
-
 }

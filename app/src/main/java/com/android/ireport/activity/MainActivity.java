@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    public static final int VERIFY_PERMIMSSION_REQUEST = 1;
+    public static final int VERIFY_PERMISSION_REQUEST = 1;
 
     private Context mContext;
     private TextView mNoReportText;
@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private boolean checkPermissionArray(String[] permission) {
 
         for (int i = 0; i < permission.length; i++) {
@@ -98,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     private boolean checkPermissions(String permission) {
         Log.d(TAG, "checkPermissions: checking permission");
 
@@ -109,17 +107,17 @@ public class MainActivity extends AppCompatActivity {
             return false;
         } else {
             Log.d(TAG, "checkPermissions:  permission was granted for " + permission);
-
             return true;
         }
     }
 
     public void verifyPermission(String[] permissions) {
-        ActivityCompat.requestPermissions(
-                MainActivity.this,
-                permissions,
-                VERIFY_PERMIMSSION_REQUEST
-        );
+        ActivityCompat.requestPermissions(MainActivity.this, permissions, VERIFY_PERMISSION_REQUEST);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void setupBottomNavigationView() {

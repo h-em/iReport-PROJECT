@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.ireport.R;
 import com.android.ireport.model.UserExtras;
+import com.android.ireport.service.LocationService;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.google.firebase.auth.FirebaseAuth;

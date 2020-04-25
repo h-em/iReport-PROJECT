@@ -56,30 +56,32 @@ public class PhotoFragment extends Fragment {
             Log.d(TAG, "onActivityResult: try to navigate to the next screen.");
 
             Bitmap bitmap;
-            bitmap = (Bitmap) data.getExtras().get("data");
+            if (data.getExtras().get("data") != null) {
+                bitmap = (Bitmap) data.getExtras().get("data");
 
-            if (isRootTask()) {
-                try {
-                    // intent comes from galleryFragment -> send the intent to the NextActivity + extras bitmap
-                    Log.d(TAG, "onActivityResult: received new bitmap from camera: " + bitmap);
-                    Intent intent = new Intent(getActivity(), NextActivity.class);
-                    intent.putExtra(getString(R.string.selected_bitmap), bitmap);
-                    startActivity(intent);
-                } catch (NullPointerException e) {
-                    Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
-                }
-            } else {
-                try {
-                    // intent comes from EditProfileActivity
-                    //                  -> send the intent to the EditProfileActivity + extras bitmap
-                    Log.d(TAG, "onActivityResult: received new bitmap from camera: " + bitmap);
-                    Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                    intent.putExtra(getString(R.string.selected_bitmap), bitmap);
-                    intent.putExtra(getString(R.string.return_to_activity), getString(R.string.edit_profile_activity));
-                    startActivity(intent);
-                    Objects.requireNonNull(getActivity()).finish();
-                } catch (NullPointerException e) {
-                    Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
+                if (isRootTask()) {
+                    try {
+                        // intent comes from galleryFragment -> send the intent to the NextActivity + extras bitmap
+                        Log.d(TAG, "onActivityResult: received new bitmap from camera: " + bitmap);
+                        Intent intent = new Intent(getActivity(), NextActivity.class);
+                        intent.putExtra(getString(R.string.selected_bitmap), bitmap);
+                        startActivity(intent);
+                    } catch (NullPointerException e) {
+                        Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
+                    }
+                } else {
+                    try {
+                        // intent comes from EditProfileActivity
+                        //                  -> send the intent to the EditProfileActivity + extras bitmap
+                        Log.d(TAG, "onActivityResult: received new bitmap from camera: " + bitmap);
+                        Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                        intent.putExtra(getString(R.string.selected_bitmap), bitmap);
+                        intent.putExtra(getString(R.string.return_to_activity), getString(R.string.edit_profile_activity));
+                        startActivity(intent);
+                        Objects.requireNonNull(getActivity()).finish();
+                    } catch (NullPointerException e) {
+                        Log.d(TAG, "onActivityResult: NullPointerException: " + e.getMessage());
+                    }
                 }
             }
         }
@@ -108,7 +110,6 @@ public class PhotoFragment extends Fragment {
                 }
             }
         });
-
     }
 
     private boolean isRootTask() {

@@ -19,10 +19,12 @@ import com.android.ireport.login.LoginActivity;
 import com.android.ireport.model.User;
 import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
+import com.android.ireport.service.LocationService;
 import com.android.ireport.utils.BottomNavigationHelper;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.android.ireport.utils.Utils;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -97,11 +99,21 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                startLocationService();
+
                 Intent intent = new Intent(mContext, EditProfileActivity.class);
                 intent.putExtra("username", mUsername.getText().toString());
                 startActivity(intent);
+
             }
         });
+    }
+
+    private void startLocationService() {
+        ///start the server to check if is working
+        Intent intentService  = new Intent(mContext, LocationService.class);
+        startService(intentService);
     }
 
     public void onLogOutButtonPress() {
@@ -212,5 +224,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mAuth.removeAuthStateListener(mAuthStateListener);
+        stopService(new Intent(this, LocationService.class));
     }
 }

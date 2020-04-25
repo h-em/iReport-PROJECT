@@ -69,4 +69,5 @@ public class EditReportFragment extends Fragment {
             //open new dialog or fragment to edit details section
         });
     }
+
 }

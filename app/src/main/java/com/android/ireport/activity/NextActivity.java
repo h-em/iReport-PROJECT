@@ -23,9 +23,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.android.ireport.R;
+import com.android.ireport.service.LocationService;
 import com.android.ireport.utils.Constatnts;
 import com.android.ireport.utils.FireBaseHelper;
-import com.android.ireport.utils.SingleShotLocationProvider;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.android.ireport.utils.Utils;
 import com.google.android.gms.location.LocationCallback;
@@ -67,6 +67,10 @@ public class NextActivity extends AppCompatActivity {
         setContentView(R.layout.activity_next);
         mContext = NextActivity.this;
 
+        //start service to obtain current location
+        startService(new Intent(mContext, LocationService.class));
+
+
         // Initialize FireBase stuff
         mAuth = FirebaseAuth.getInstance();
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);
@@ -104,7 +108,8 @@ public class NextActivity extends AppCompatActivity {
                             Constatnts.REQUEST_CODE_LOCATION_PERMISSION);
                 }else{
                     //get current location
-                    getCurrentLocation();
+                    //getCurrentLocation();
+                    startService(new Intent(mContext, LocationService.class));
                 }
                 String latitude = Utils.getLatitude(mContext);
                 String longitude = Utils.getLongitude(mContext);
@@ -112,15 +117,12 @@ public class NextActivity extends AppCompatActivity {
                 // if the image comes from GalleryFragment with extra imageUrl
                 if (intent.hasExtra(getString(R.string.selected_image))) {
                     String imgUrl = intent.getStringExtra(getString(R.string.selected_image));
-
-                    mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.new_photo), reportDescription,
-                            imageCount, imgUrl, null, latitude, longitude);
+                    mFirebaseHelper.uploadNewReportAndPhoto(reportDescription, imageCount, imgUrl, latitude, longitude);
                 }
                 // if the image comes from PhotoFragment with extra bitmap
                 else if(intent.hasExtra(getString(R.string.selected_bitmap))){
                     Bitmap bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
-                    mFirebaseHelper.uploadNewReportAndPhoto(getString(R.string.selected_bitmap), reportDescription,
-                            imageCount, bitmap,null, latitude, longitude);
+                    mFirebaseHelper.uploadNewReportAndPhoto(reportDescription, imageCount, bitmap,latitude, longitude);
                 }
 
                 //small delay(it gives time for images to update into firebase)
@@ -150,7 +152,8 @@ public class NextActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == Constatnts.REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getCurrentLocation();
+                //getCurrentLocation();
+                startService(new Intent(mContext, LocationService.class));
             }else{
                 Toast.makeText(mContext, "Permisison denied!", Toast.LENGTH_SHORT).show();
             }
@@ -210,12 +213,11 @@ public class NextActivity extends AppCompatActivity {
 
     private void getCurrentLocation(){
         Log.d(TAG, "getCurrentLocation(): getting current location.");
+        /*
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(3000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        getCurrentLocation2();
 
         LocationServices.getFusedLocationProviderClient(NextActivity.this)
                 .requestLocationUpdates(locationRequest, new LocationCallback(){
@@ -237,18 +239,11 @@ public class NextActivity extends AppCompatActivity {
                         }
 
                     }
-                },Looper.getMainLooper());
+                },Looper.getMainLooper());*/
+
+
     }
 
-    public void getCurrentLocation2(){
-
-        SingleShotLocationProvider.requestSingleUpdate(mContext,
-                new SingleShotLocationProvider.LocationCallback() {
-                    @Override public void onNewLocationAvailable(SingleShotLocationProvider.GPSCoordinates location) {
-                        Log.d("Location", "my location is " + location.toString());
-                    }
-                });
-    }
 
     @Override
     public void onStart() {

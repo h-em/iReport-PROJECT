@@ -17,7 +17,7 @@ public class BottomNavigationHelper {
     private static final String TAG = "BottomNavigationHelper";
 
     public static void enableNavigation(final Context context, final Activity callingActivity, BottomNavigationView bottomNavigationView) {
-        bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+        /*bottomNavigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
             @Override
             public void onNavigationItemReselected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -38,6 +38,31 @@ public class BottomNavigationHelper {
                         callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         break;
                 }
+            }
+        });*/
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_item_user_reports:
+                        Intent userReportsIntent = new Intent(context, MainActivity.class);
+                        context.startActivity(userReportsIntent);
+                        callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        break;
+                    case R.id.menu_item_camera:
+                        Intent cameraIntent = new Intent(context, CameraActivity.class);
+                        cameraIntent.putExtra(Constatnts.CAMERA_FLAG,0);
+                        context.startActivity(cameraIntent);
+                        callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        break;
+                    case R.id.menu_item_user_profile:
+                        Intent userProfileIntent = new Intent(context, ProfileActivity.class);
+                        context.startActivity(userProfileIntent);
+                        callingActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        break;
+                }
+                return false;
             }
         });
 
