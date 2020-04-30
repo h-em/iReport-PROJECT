@@ -32,7 +32,7 @@
                         android:textSize="20sp" />
 
                 </RelativeLayout>
-<!--
+
                 <ImageView
                     android:id="@+id/edit_icon_reports_list"
                     android:layout_width="30dp"
@@ -41,7 +41,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_mode_edit_black_24dp" />
--->
+
             </RelativeLayout>
 
 

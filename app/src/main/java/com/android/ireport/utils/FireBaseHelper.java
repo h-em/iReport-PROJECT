@@ -47,13 +47,13 @@ public class FireBaseHelper {
     //firebase
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference mReference;
+    private DatabaseReference mRef;
     StorageReference mStorageReference;
 
     public FireBaseHelper(Context context) {
         mContext = context;
         mAuth = FirebaseAuth.getInstance();
-        mReference = FirebaseDatabase.getInstance().getReference();
+        mRef = FirebaseDatabase.getInstance().getReference();
         mStorageReference = FirebaseStorage.getInstance().getReference();
     }
 
@@ -68,7 +68,6 @@ public class FireBaseHelper {
 
                     } else {
                         // If sign in fails, display a message to the user.
-
                         Log.w(TAG, "registerUser: failure.", task.getException());
                         Toast.makeText(mContext, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
@@ -94,14 +93,12 @@ public class FireBaseHelper {
 
     public void addNewUser(String username, String email, String profilePhoto) {
 
-        ///add user
-
         if (mAuth.getCurrentUser() != null) {
             userId = mAuth.getCurrentUser().getUid();
         }
 
         User user = new User(email, username);
-        mReference.child(mContext.getString(R.string.users_node_name))
+        mRef.child(mContext.getString(R.string.users_node_name))
                 .child(userId)
                 .setValue(user);
         Log.d(TAG, "addNewUser: new user added.");
@@ -111,7 +108,7 @@ public class FireBaseHelper {
                 profilePhoto,
                 0,
                 0);
-        mReference.child(mContext.getString(R.string.users_account_node_name))
+        mRef.child(mContext.getString(R.string.users_account_node_name))
                 .child(userId)
                 .setValue(userExtras);
 
@@ -272,10 +269,35 @@ public class FireBaseHelper {
         }
 
         if (username != null) {
-            mReference.child("users").child(userId).child("username").setValue(username);
+            mRef.child("users").child(userId).child("username").setValue(username);
             Toast.makeText(mContext, "username updated", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(mContext, "username is null", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateReportDescription(String reportDetails, String reportId){
+        if (mAuth.getCurrentUser() != null) {
+            userId = mAuth.getCurrentUser().getUid();
+        }
+
+        if (reportDetails != null && reportId != null) {
+            //update report details  from reports collection
+            mRef.child("reports")
+                    .child(reportId)
+                    .child("details")
+                    .setValue(reportDetails);
+
+            //update report details from user_reports collection
+            mRef.child("user_reports")
+                    .child(userId)
+                    .child(reportId)
+                    .child("details")
+                    .setValue(reportDetails);
+
+            Toast.makeText(mContext, "Updating report details... ", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "report details are null", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -472,14 +494,14 @@ public class FireBaseHelper {
         Log.d(TAG, "addPhotoToDatabase: adding photo to database");
 
         //creez id-ul( random string)  si il iau din db
-        String newPhotoKey = mReference.child("photos").push().getKey();
+        String newPhotoKey = mRef.child("photos").push().getKey();
         //creez obiectul
         Photo photo = new Photo();
         photo.setImage_url(downloadUrl);
         photo.setPhoto_id(newPhotoKey);
 
         // insert la poza in nodul "photos"
-        mReference.child("photos").child(newPhotoKey).setValue(photo);
+        mRef.child("photos").child(newPhotoKey).setValue(photo);
 
         return photo;
     }
@@ -491,7 +513,7 @@ public class FireBaseHelper {
         Photo photo = addPhotoToDatabase(downloadUrl);
 
         //creez id-ul(random string) si il iau din db
-        String newReportKey = mReference.child("reports").push().getKey();
+        String newReportKey = mRef.child("reports").push().getKey();
         //creez obiectul report
         Report report = new Report();
         report.setCurrent_date(getTimeStamp());
@@ -504,10 +526,10 @@ public class FireBaseHelper {
         report.setReport_id(newReportKey);
 
         //insert in nodul "reports" -- DONE
-        mReference.child("reports").child(newReportKey).setValue(report);
+        mRef.child("reports").child(newReportKey).setValue(report);
 
         //insert in nodul de user_reports in functie de id_ul userului curent -- DONE
-        mReference.child("user_reports").child(FirebaseAuth.getInstance().getCurrentUser()
+        mRef.child("user_reports").child(FirebaseAuth.getInstance().getCurrentUser()
                 .getUid()).child(newReportKey).setValue(report);
     }
 
@@ -564,7 +586,7 @@ public class FireBaseHelper {
     private void setProfilePhoto(String imageUrl) {
         Log.d(TAG, "setProfilePhoto: set user profile photo: " + imageUrl);
 
-        mReference.child("users_account")
+        mRef.child("users_account")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child("profile_photo")
                 .setValue(imageUrl);

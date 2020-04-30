@@ -1,7 +1,6 @@
 package com.android.ireport.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,15 +19,7 @@ import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.model.Report;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -76,11 +67,12 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 arguments.putString("report_longitude", mUserReports.get(position).getLongitude());
                 arguments.putString("report_photo_url", mUserReports.get(position).getPhoto().getImage_url());
                 arguments.putString("report_status", mUserReports.get(position).getStatus());
+                arguments.putString("report_id", mUserReports.get(position).getReport_id());
 
                 EditReportFragment editReportFragment = new EditReportFragment();
                 editReportFragment.setArguments(arguments);
 
-                mFragmentManager.beginTransaction().replace(R.id.fragment_container, editReportFragment).addToBackStack(null).commit();
+                mFragmentManager.beginTransaction().replace(R.id.middle_layout, editReportFragment).addToBackStack(null).commit();
             }
         });
     }

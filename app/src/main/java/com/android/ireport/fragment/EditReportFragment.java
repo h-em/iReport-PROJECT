@@ -1,6 +1,5 @@
 package com.android.ireport.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.ireport.R;
+import com.android.ireport.dialog.UpdateReportDetailsDialog;
 import com.android.ireport.utils.UniversalImageLoader;
 
 public class EditReportFragment extends Fragment {
@@ -33,15 +33,17 @@ public class EditReportFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: ");
         return inflater.inflate(R.layout.fragment_report_details, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onViewCreated: ");
         super.onViewCreated(view, savedInstanceState);
 
-        backArrow = view.findViewById(R.id.back_arrow_icon_report_toolbar);
-        editReport = view.findViewById(R.id.edit_icon_reports_list);
+        backArrow = view.findViewById(R.id.iv_back_arrow_edit_report);
+        editReport = view.findViewById(R.id.iv_edit_icon_report);
         itemImage = view.findViewById(R.id.image_edit_report);
 
         date = view.findViewById(R.id.item_date);
@@ -52,9 +54,12 @@ public class EditReportFragment extends Fragment {
         setViewsOnFragment();
 
         onBackArrowPress();
+
+        onEditPress();
     }
 
     private void setViewsOnFragment() {
+        Log.d(TAG, "setViewsOnFragment: ");
 
         Bundle args = getArguments();
 
@@ -62,7 +67,7 @@ public class EditReportFragment extends Fragment {
         details.setText("Description: " + args.getString("report_details"));
         location.setText("Latitude: " + args.getString("report_latitude")
                 + "  Longitude: " + args.getString("report_longitude"));
-        status.setText("Current status: " + args.getString("report_status"));
+        status.setText("Current status: " + args.getString("report_status").toUpperCase());
 
         String imgUrl = args.getString("report_photo_url");
         Log.d(TAG, "setImage: got new image url: " + imgUrl);
@@ -82,8 +87,15 @@ public class EditReportFragment extends Fragment {
     }
 
     public void onEditPress() {
+
         editReport.setOnClickListener((v) -> {
-            //open new dialog or fragment to edit details section
+            Bundle args = new Bundle();
+            args.putString("description_for_dialog", getArguments().getString("report_details"));
+            args.putString("report_id_for_dialog", getArguments().getString("report_id"));
+
+            UpdateReportDetailsDialog dialog = new UpdateReportDetailsDialog();
+            dialog.setArguments(args);
+            dialog.show(getActivity().getSupportFragmentManager(),"update dialog");
         });
     }
 
