@@ -103,30 +103,26 @@ public class LoginActivity extends AppCompatActivity {
                 singInExistingUser(email, password);
             }
         });
-
-
-
     }
 
 
     public void singInExistingUser(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "singInExistingUser: success");
-                        Toast.makeText(mContext, "Authentication success.", Toast.LENGTH_SHORT).show();
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d(TAG, "singInExistingUser: success");
+                Toast.makeText(mContext, "Authentication success.", Toast.LENGTH_SHORT).show();
 
-                    } else {
+            } else {
 
-                        // If sign in fails, display a message to the user.
-                        Log.d(TAG, "singInExistingUser: failure", task.getException());
-                        Toast.makeText(mContext, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                    }
+                // If sign in fails, display a message to the user.
+                Log.d(TAG, "singInExistingUser: failure", task.getException());
+                Toast.makeText(mContext, "Authentication failed.", Toast.LENGTH_SHORT).show();
+            }
 
-                    mProgressBar.setVisibility(View.GONE);
-                    mPleaseWait.setVisibility(View.GONE);
-                });
+            mProgressBar.setVisibility(View.GONE);
+            mPleaseWait.setVisibility(View.GONE);
+        });
     }
 
 
@@ -135,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(mContext, MainActivity.class);
             startActivity(intent);
             finish();
-        }else{
+        } else {
             Log.d(TAG, "goToHomeIfUserIsLogged: ");
         }
     }
@@ -163,27 +159,3 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

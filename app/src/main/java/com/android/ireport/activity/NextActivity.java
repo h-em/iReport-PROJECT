@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -24,14 +23,10 @@ import androidx.core.content.ContextCompat;
 
 import com.android.ireport.R;
 import com.android.ireport.service.LocationService;
-import com.android.ireport.utils.Constatnts;
+import com.android.ireport.utils.Constants;
 import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
 import com.android.ireport.utils.Utils;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -100,11 +95,11 @@ public class NextActivity extends AppCompatActivity {
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(NextActivity.this,
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            Constatnts.REQUEST_CODE_LOCATION_PERMISSION);
+                            Constants.REQUEST_CODE_LOCATION_PERMISSION);
 
                     ActivityCompat.requestPermissions(NextActivity.this,
                             new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                            Constatnts.REQUEST_CODE_LOCATION_PERMISSION);
+                            Constants.REQUEST_CODE_LOCATION_PERMISSION);
                 }else{
                     //get current location
                     //getCurrentLocation();
@@ -131,7 +126,6 @@ public class NextActivity extends AppCompatActivity {
                     finish();
                 }, 2500);
             }
-
         });
     }
 
@@ -149,7 +143,7 @@ public class NextActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == Constatnts.REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0){
+        if(requestCode == Constants.REQUEST_CODE_LOCATION_PERMISSION && grantResults.length > 0){
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 //getCurrentLocation();
                 startService(new Intent(mContext, LocationService.class));

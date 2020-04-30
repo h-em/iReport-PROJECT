@@ -258,7 +258,8 @@ public class FireBaseHelper {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
     }
 
@@ -276,7 +277,7 @@ public class FireBaseHelper {
         }
     }
 
-    public void updateReportDescription(String reportDetails, String reportId){
+    public void updateReportDescription(String reportDetails, String reportId) {
         if (mAuth.getCurrentUser() != null) {
             userId = mAuth.getCurrentUser().getUid();
         }

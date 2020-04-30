@@ -37,8 +37,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
 
     //firebase
-    private FirebaseAuth mAuth;
-    //private FirebaseAuth.AuthStateListener mAuthStateListener;
     private DatabaseReference mReference;
     private FireBaseHelper mFirebaseHelper;
 
@@ -49,7 +47,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
         mContext = EditProfileActivity.this;
 
-        mAuth = FirebaseAuth.getInstance();
         mReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseHelper = new FireBaseHelper(mContext);
 

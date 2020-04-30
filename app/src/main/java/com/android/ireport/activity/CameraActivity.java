@@ -15,7 +15,7 @@ import com.android.ireport.R;
 import com.android.ireport.adapter.SectionsPagerAdapter;
 import com.android.ireport.fragment.GalleryFragment;
 import com.android.ireport.fragment.PhotoFragment;
-import com.android.ireport.utils.Constatnts;
+import com.android.ireport.utils.Constants;
 import com.android.ireport.utils.Permissions;
 import com.google.android.material.tabs.TabLayout;
 
@@ -23,7 +23,6 @@ import com.google.android.material.tabs.TabLayout;
 public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "ShareActivity";
 
-    private static final int ACTIVITY_NUM = 2;
     private static final int VERIFY_PERMISSIONS_REQUEST = 1;
 
     private ViewPager mViewPager;
@@ -45,7 +44,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void setFlag() {
-        if(getIntent().hasExtra(Constatnts.CAMERA_FLAG)){
+        if(getIntent().hasExtra(Constants.CAMERA_FLAG)){
             Log.d(TAG, "setFlag(): set Flag to 0.");
             getIntent().setFlags(0);
         }else{
@@ -79,7 +78,6 @@ public class CameraActivity extends AppCompatActivity {
 
         tabLayout.getTabAt(0).setText("GALLERY");
         tabLayout.getTabAt(1).setText("PHOTO");
-
     }
 
     public int getTask() {
@@ -110,7 +108,6 @@ public class CameraActivity extends AppCompatActivity {
         return true;
     }
 
-
     public boolean checkPermissions(String permission) {
         Log.d(TAG, "checkPermissions: checking permission: " + permission);
 
@@ -123,16 +120,5 @@ public class CameraActivity extends AppCompatActivity {
             Log.d(TAG, "checkPermissions: \n Permissions was granted for: " + permission);
             return true;
         }
-    }
-
-
-    private void setupBottomNavigationView() {
-      /*  Log.d(TAG, "setupBottomNavigationView: setting up BottomNavigationView");
-        BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.bottomNavViewBar);
-        BottomNavigationViewHelper.setupBottomNavigationView(bottomNavigationViewEx);
-        BottomNavigationViewHelper.enableNavigation(mContext, this,bottomNavigationViewEx);
-        Menu menu = bottomNavigationViewEx.getMenu();
-        MenuItem menuItem = menu.getItem(ACTIVITY_NUM);
-        menuItem.setChecked(true);*/
     }
 }

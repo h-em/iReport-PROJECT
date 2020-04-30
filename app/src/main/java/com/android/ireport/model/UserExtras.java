@@ -10,7 +10,6 @@ public class UserExtras {
     private int reports_nr;
     private int resolved_reports_nr;
 
-
     public UserExtras(String profile_photo, int reports_nr, int resolved_reports_nr) {
         this.profile_photo = profile_photo;
         this.reports_nr = reports_nr;

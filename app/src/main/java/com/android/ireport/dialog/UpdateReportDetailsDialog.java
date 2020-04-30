@@ -1,10 +1,8 @@
 package com.android.ireport.dialog;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,13 +66,12 @@ public class UpdateReportDetailsDialog extends AppCompatDialogFragment {
                     }
                 });
 
-
         details.setText(getArguments().getString("description_for_dialog"));
 
         return builder.create();
     }
 
-    private void updateReportDescription(String details, String reportId){
+    private void updateReportDescription(String details, String reportId) {
         mFirebaseHelper.updateReportDescription(details, reportId);
     }
 }

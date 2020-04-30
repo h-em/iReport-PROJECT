@@ -164,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) { }
         });
-
-
     }
 
     private void swipeLeftToDeleteItem(RecyclerView recyclerView, RecycleViewAdapter adapter) {

@@ -110,13 +110,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                         //create and add user to the database
                         mFireBaseHelper.addNewUser(username, email, "");
-
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
+                    public void onCancelled(@NonNull DatabaseError databaseError) { }
                 });
 
                 goToHomeIfUserIsLogged();
@@ -145,7 +142,6 @@ public class RegisterActivity extends AppCompatActivity {
                 mFireBaseHelper.registerUser(email, password, username);
                 mProgressBar.setVisibility(View.GONE);
                 mLoadingPleaseWait.setVisibility(View.GONE);
-
             }
         });
     }

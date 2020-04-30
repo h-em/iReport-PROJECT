@@ -72,9 +72,7 @@ public class EditReportFragment extends Fragment {
         String imgUrl = args.getString("report_photo_url");
         Log.d(TAG, "setImage: got new image url: " + imgUrl);
         UniversalImageLoader.setImage(imgUrl, itemImage, null, "");
-
     }
-
 
     public void onBackArrowPress() {
         backArrow.setOnClickListener((v) -> {

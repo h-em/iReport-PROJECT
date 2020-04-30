@@ -113,40 +113,6 @@ public class PhotoFragment extends Fragment {
     }
 
     private boolean isRootTask() {
-        if (((CameraActivity) getActivity()).getTask() == 0) return true;
-        return false;
+        return ((CameraActivity) getActivity()).getTask() == 0;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

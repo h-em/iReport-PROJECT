@@ -3,7 +3,6 @@ package com.android.ireport.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +30,6 @@ public class ImageManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
         return bitmap;
     }
