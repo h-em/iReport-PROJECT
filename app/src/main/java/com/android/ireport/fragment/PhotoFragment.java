@@ -56,7 +56,7 @@ public class PhotoFragment extends Fragment {
             Log.d(TAG, "onActivityResult: try to navigate to the next screen.");
 
             Bitmap bitmap;
-            if (data.getExtras().get("data") != null) {
+            if (data != null) {
                 bitmap = (Bitmap) data.getExtras().get("data");
 
                 if (isRootTask()) {

@@ -20,7 +20,6 @@ import com.android.ireport.utils.Permissions;
 import com.google.android.material.tabs.TabLayout;
 
 
-
 public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "ShareActivity";
 
