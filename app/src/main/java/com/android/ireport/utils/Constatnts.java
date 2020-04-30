@@ -18,4 +18,5 @@ public class Constatnts {
 
     public static final String CAMERA_FLAG = "camera_flag_0";
 
+    public static final String DELETED = "deleted";
 }

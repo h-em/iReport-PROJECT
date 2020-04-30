@@ -16,8 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.ireport.R;
 import com.android.ireport.fragment.EditReportFragment;
 import com.android.ireport.model.Report;
+import com.android.ireport.utils.FireBaseHelper;
 import com.android.ireport.utils.UniversalImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,12 +36,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private List<Report> mUserReports;
     private Context mContext;
     private FragmentManager mFragmentManager;
+    private FireBaseHelper mFirebaseHelper;
 
     public RecycleViewAdapter(List<Report> mUserReports, Context mContext, FragmentManager fragmentManager) {
         this.mUserReports = mUserReports;
         this.mContext = mContext;
         this.mFragmentManager = fragmentManager;
-
+        this.mFirebaseHelper = new FireBaseHelper(mContext);
     }
 
     @NonNull
@@ -56,9 +66,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new EditReportFragment()).commit();
+                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new EditReportFragment()).addToBackStack(null).commit();
             }
         });
+    }
+
+    public void deleteItem(String reportId){
+        mFirebaseHelper.deleteItemForAGivenReportId(reportId);
     }
 
     @Override

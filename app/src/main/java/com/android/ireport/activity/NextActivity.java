@@ -70,7 +70,6 @@ public class NextActivity extends AppCompatActivity {
         //start service to obtain current location
         startService(new Intent(mContext, LocationService.class));
 
-
         // Initialize FireBase stuff
         mAuth = FirebaseAuth.getInstance();
         mFirebaseHelper = new FireBaseHelper(NextActivity.this);

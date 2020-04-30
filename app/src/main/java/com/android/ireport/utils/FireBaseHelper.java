@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,14 +17,14 @@ import com.android.ireport.model.Report;
 import com.android.ireport.model.User;
 import com.android.ireport.model.UserData;
 import com.android.ireport.model.UserExtras;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -241,6 +240,31 @@ public class FireBaseHelper {
         return reports;
     }
 
+    public void deleteItemForAGivenReportId(String reportId) {
+        Utils.setStatus(mContext, false);
+        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                Boolean status = Utils.getStatus(mContext);
+                if (!status) {
+                    //delete report from reports collection
+                    dataSnapshot.child("reports").child(reportId).getRef().removeValue();
+                    //delete report from user_reports collection
+                    dataSnapshot.child("user_reports").child(currentUser.getUid())
+                            .child(reportId).getRef().removeValue();
+                    Utils.setStatus(mContext, true);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
     public void updateUsername(String username) {
 
         if (mAuth.getCurrentUser() != null) {
@@ -285,59 +309,6 @@ public class FireBaseHelper {
         }
         return count;
     }
-
-   /* public void uploadPhoto(String imageUrl) {
-        FilePaths filePaths = new FilePaths();
-
-        Log.d(TAG, "uploadNewReportAndPhoto: Upload new photo for user profile.");
-
-        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        StorageReference storageReference = mStorageReference
-                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/profile_photo");
-
-        Bitmap bitmap = ImageManager.getBitmap(imageUrl);
-        byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
-
-        UploadTask uploadTask;
-        uploadTask = storageReference.putBytes(bytes);
-
-        //get image link from firebase
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            Log.d(TAG, "uploadNewReportAndPhoto: addOnSuccessListener() -> taskSnapshot: " + taskSnapshot.toString());
-            Toast.makeText(mContext, "photo uploaded success!", Toast.LENGTH_SHORT).show();
-
-            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    String firebaseImageUrl = uri.toString();
-
-                    //inset photo in users_account
-                    setProfilePhoto(firebaseImageUrl);
-
-                    //navigate to the main page
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
-
-        }).addOnFailureListener(e -> {
-            Log.d(TAG, "uploadNewReportAndPhoto: addOnFailureListener() -> Exception: " + e);
-            Toast.makeText(mContext, "photo upload failed! ", Toast.LENGTH_SHORT).show();
-
-        }).addOnProgressListener(taskSnapshot -> {
-            Log.d(TAG, "uploadNewReportAndPhoto: addOnProgressListener() -> taskSnapshot: " + taskSnapshot.toString());
-            double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-
-            if (progress - 15 > mPhotoUploadProgress) {
-                Toast.makeText(mContext, "photo upload progress: "
-                        + String.format("%.0f", progress) + "%", Toast.LENGTH_SHORT).show();
-                mPhotoUploadProgress = progress;
-            }
-            Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
-        });
-    }*/
-
-
 
     public void uploadProfilePhotoOnly(String imageUrl) {
         FilePaths filePaths = new FilePaths();
@@ -390,7 +361,6 @@ public class FireBaseHelper {
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
         });
     }
-
 
     public void uploadNewReportAndPhoto(String reportDescription, int imageCount, String imageUrl,
                                         String latitude, String longitude) {
@@ -514,22 +484,6 @@ public class FireBaseHelper {
         return photo;
     }
 
-    private void setProfilePhoto(String imageUrl) {
-        Log.d(TAG, "setProfilePhoto: set user profile photo: " + imageUrl);
-
-        mReference.child("users_account")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("profile_photo")
-                .setValue(imageUrl);
-    }
-
-
-    private String getTimeStamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+2"));
-        return sdf.format(new Date());
-    }
-
 
     public void addReportToDatabase(String latitude, String longitude, String details, String downloadUrl) {
 
@@ -547,6 +501,7 @@ public class FireBaseHelper {
         report.setStatus("new");
         report.setPhoto(photo);
         report.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        report.setReport_id(newReportKey);
 
         //insert in nodul "reports" -- DONE
         mReference.child("reports").child(newReportKey).setValue(report);
@@ -604,5 +559,21 @@ public class FireBaseHelper {
             }
             Log.d(TAG, "addOnProgressListener() -> photo upload progress: " + progress);
         });
+    }
+
+    private void setProfilePhoto(String imageUrl) {
+        Log.d(TAG, "setProfilePhoto: set user profile photo: " + imageUrl);
+
+        mReference.child("users_account")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("profile_photo")
+                .setValue(imageUrl);
+    }
+
+
+    private String getTimeStamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+2"));
+        return sdf.format(new Date());
     }
 }

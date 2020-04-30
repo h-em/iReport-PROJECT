@@ -6,12 +6,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mReference;
     private FireBaseHelper mFireBaseHelper;
+
+    //utils
+    private List<Report> mReports;
+    private  RecycleViewAdapter mAdapter;
 
 
     @Override
@@ -136,45 +142,57 @@ public class MainActivity extends AppCompatActivity {
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView(): init recycleview.");
 
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mReference = mFirebaseDatabase.getReference();
-
 
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange(): get Reports from firebase...");
 
-                List<Report> reports;
-                reports = mFireBaseHelper.getUserReports(dataSnapshot);
-                Log.d(TAG, "onDataChange(): mUserReports: " + reports);
+                mReports = mFireBaseHelper.getUserReports(dataSnapshot);
+                mAdapter = new RecycleViewAdapter(mReports, mContext, getSupportFragmentManager());
 
-                //save list into shared preferences
-                Utils.setReportsList(mContext, Collections.EMPTY_LIST);
-                Utils.setReportsList(mContext, reports);
+                if (mReports != null) {
 
+                    showOrHideNoReportTextView(mAdapter);
+
+                    recyclerView.setAdapter(mAdapter);
+
+                    swipeLeftToDeleteItem(recyclerView, mAdapter);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
+
+    }
+
+    private void swipeLeftToDeleteItem(RecyclerView recyclerView, RecycleViewAdapter adapter) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Report report = mReports.get(viewHolder.getAdapterPosition());
+                adapter.deleteItem(report.getReport_id());
             }
-        });
+        }).attachToRecyclerView(recyclerView);
+    }
 
-        //get list from shared preferences
-        List<Report> reports = Utils.getReportsList(mContext);
-        Log.d(TAG, "initRecyclerView(): reports: " + reports);
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(reports, mContext, getSupportFragmentManager());
-        if (reports != null) {
-
-            if (adapter.getItemCount() > 0) {
-                mNoReportText.setVisibility(View.GONE);
-            } else {
-                mNoReportText.setVisibility(View.VISIBLE);
-            }
-            recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-            recyclerView.setAdapter(adapter);
+    private void showOrHideNoReportTextView(RecycleViewAdapter adapter) {
+        if (adapter.getItemCount() > 0) {
+            mNoReportText.setVisibility(View.GONE);
+        } else {
+            mNoReportText.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void checkCurrentUser(FirebaseUser user) {

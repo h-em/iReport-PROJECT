@@ -122,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity {
         logOutButton.setOnClickListener(v -> {
             if (mAuth.getCurrentUser() != null) {
                 mAuth.signOut();
-                Utils.setReportsList(mContext, Collections.EMPTY_LIST);
+                //Utils.setReportsList(mContext, Collections.EMPTY_LIST);
                 Intent intent = new Intent(mContext, LoginActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -153,8 +153,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
-
-
     }
 
     private void firebaseAuthSetup() {

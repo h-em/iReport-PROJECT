@@ -42,6 +42,18 @@ public class Utils {
         return pref.getString(Constatnts.LATITUDE, Constatnts.DEFAULT_VALUE_LOCATION);
     }
 
+    public static Boolean getStatus(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Constatnts.PRIVATE_PREFERENCES, MODE_PRIVATE);
+        return pref.getBoolean(Constatnts.DELETED, false);
+    }
+
+    public static void setStatus(Context context, boolean status) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constatnts.PRIVATE_PREFERENCES, MODE_PRIVATE).edit();
+        editor.putBoolean(Constatnts.DELETED, status);
+        editor.apply();
+    }
+
+
     public static void setReportsList(Context context, List<Report> reports){
         SharedPreferences.Editor prefsEditor = context.getSharedPreferences(Constatnts.PRIVATE_PREFERENCES, MODE_PRIVATE).edit();
         Gson gson = new Gson();
