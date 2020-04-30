@@ -1,6 +1,8 @@
 package com.android.ireport.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +16,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.android.ireport.R;
+import com.android.ireport.utils.UniversalImageLoader;
 
 public class EditReportFragment extends Fragment {
     private static final String TAG = "EditReportFragment";
 
     ImageView backArrow;
-    ImageView deleteIcon;
     ImageView editReport;
     ImageView itemImage;
 
-    TextView title;
     TextView date;
     TextView location;
     TextView status;
@@ -40,22 +41,38 @@ public class EditReportFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         backArrow = view.findViewById(R.id.back_arrow_icon_report_toolbar);
-        deleteIcon = view.findViewById(R.id.delete_icon_bottom_appBar);
         editReport = view.findViewById(R.id.edit_icon_reports_list);
         itemImage = view.findViewById(R.id.image_edit_report);
 
-        title = view.findViewById(R.id.item_title);
         date = view.findViewById(R.id.item_date);
         details = view.findViewById(R.id.item_details);
         location = view.findViewById(R.id.item_location);
         status = view.findViewById(R.id.item_status);
 
+        setViewsOnFragment();
+
         onBackArrowPress();
     }
 
+    private void setViewsOnFragment() {
 
-    public void onBackArrowPress(){
-        backArrow.setOnClickListener((v)-> {
+        Bundle args = getArguments();
+
+        date.setText("Date: " + args.getString("report_date"));
+        details.setText("Description: " + args.getString("report_details"));
+        location.setText("Latitude: " + args.getString("report_latitude")
+                + "  Longitude: " + args.getString("report_longitude"));
+        status.setText("Current status: " + args.getString("report_status"));
+
+        String imgUrl = args.getString("report_photo_url");
+        Log.d(TAG, "setImage: got new image url: " + imgUrl);
+        UniversalImageLoader.setImage(imgUrl, itemImage, null, "");
+
+    }
+
+
+    public void onBackArrowPress() {
+        backArrow.setOnClickListener((v) -> {
             FragmentManager manager = getActivity().getSupportFragmentManager();
             FragmentTransaction trans = manager.beginTransaction();
             trans.remove(this);

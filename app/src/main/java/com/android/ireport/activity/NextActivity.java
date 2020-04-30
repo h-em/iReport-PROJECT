@@ -210,40 +210,6 @@ public class NextActivity extends AppCompatActivity {
         });
     }
 
-    private void getCurrentLocation(){
-        Log.d(TAG, "getCurrentLocation(): getting current location.");
-        /*
-        LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(3000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        LocationServices.getFusedLocationProviderClient(NextActivity.this)
-                .requestLocationUpdates(locationRequest, new LocationCallback(){
-
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        LocationServices.getFusedLocationProviderClient(NextActivity.this)
-                                .removeLocationUpdates(this);
-                        if(locationResult != null && locationResult.getLocations().size() > 0){
-                            int latestLocationIndex = locationResult.getLocations().size() - 1;
-                            double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
-                            double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-
-                            Utils.setLocation(Double.toString(latitude), Double.toString(longitude), mContext);
-
-                            Log.d(TAG, "onLocationResult(): latitude: "+ latitude);
-                            Log.d(TAG, "onLocationResult(): longitude: "+ longitude);
-                        }
-
-                    }
-                },Looper.getMainLooper());*/
-
-
-    }
-
-
     @Override
     public void onStart() {
         super.onStart();

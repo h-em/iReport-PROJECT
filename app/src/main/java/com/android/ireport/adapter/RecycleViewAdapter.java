@@ -1,6 +1,8 @@
 package com.android.ireport.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +68,19 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentManager.beginTransaction().replace(R.id.fragment_container, new EditReportFragment()).addToBackStack(null).commit();
+
+                Bundle arguments = new Bundle();
+                arguments.putString("report_date", mUserReports.get(position).getCurrent_date());
+                arguments.putString("report_details", mUserReports.get(position).getDetails());
+                arguments.putString("report_latitude", mUserReports.get(position).getLatitude());
+                arguments.putString("report_longitude", mUserReports.get(position).getLongitude());
+                arguments.putString("report_photo_url", mUserReports.get(position).getPhoto().getImage_url());
+                arguments.putString("report_status", mUserReports.get(position).getStatus());
+
+                EditReportFragment editReportFragment = new EditReportFragment();
+                editReportFragment.setArguments(arguments);
+
+                mFragmentManager.beginTransaction().replace(R.id.fragment_container, editReportFragment).addToBackStack(null).commit();
             }
         });
     }
@@ -92,7 +106,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //reportDetails = itemView.findViewById(R.id.item_details_report);
+            //reportDetails = itemView.findViewById(R.id.report_details_next_activity);
             date = itemView.findViewById(R.id.item_date);
             latitude = itemView.findViewById(R.id.item_latitude_report);
             //latitude.setVisibility(View.GONE);
