@@ -253,6 +253,8 @@ public class FireBaseHelper {
                     //delete report from user_reports collection
                     dataSnapshot.child("user_reports").child(currentUser.getUid())
                             .child(reportId).getRef().removeValue();
+                    //delete related photo
+                    dataSnapshot.child("photos").child(reportId).getRef().removeValue();
                     Utils.setStatus(mContext, true);
                 }
             }
