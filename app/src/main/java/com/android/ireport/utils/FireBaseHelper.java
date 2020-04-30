@@ -253,8 +253,6 @@ public class FireBaseHelper {
                     //delete report from user_reports collection
                     dataSnapshot.child("user_reports").child(currentUser.getUid())
                             .child(reportId).getRef().removeValue();
-                    //delete related photo
-                    dataSnapshot.child("photos").child(reportId).getRef().removeValue();
                     Utils.setStatus(mContext, true);
                 }
             }
@@ -497,14 +495,14 @@ public class FireBaseHelper {
         Log.d(TAG, "addPhotoToDatabase: adding photo to database");
 
         //creez id-ul( random string)  si il iau din db
-        String newPhotoKey = mRef.child("photos").push().getKey();
+        //String newPhotoKey = mRef.child("photos").push().getKey();
         //creez obiectul
         Photo photo = new Photo();
         photo.setImage_url(downloadUrl);
-        photo.setPhoto_id(newPhotoKey);
+        photo.setPhoto_id("null");
 
         // insert la poza in nodul "photos"
-        mRef.child("photos").child(newPhotoKey).setValue(photo);
+        //mRef.child("photos").child(newPhotoKey).setValue(photo);
 
         return photo;
     }
