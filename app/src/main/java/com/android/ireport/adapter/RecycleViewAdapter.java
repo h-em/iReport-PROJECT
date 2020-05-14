@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,7 +95,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         TextView latitude;
         TextView longitude;
         TextView status;
-        ConstraintLayout parentLayout;
+        CardView parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

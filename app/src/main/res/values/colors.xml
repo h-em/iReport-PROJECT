@@ -8,4 +8,7 @@
     <color name="link_blue">#0645AD</color>
 
     <color name="light_gray">#F3F3F3</color>
+    <color name="item_gray">#bdbebd</color>
+
+
 </resources>

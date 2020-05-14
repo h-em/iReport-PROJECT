@@ -1,93 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parent_layout"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
-    android:layout_margin="3dp"
-    app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="6dp"
-    app:cardElevation="4dp"
-    app:cardPreventCornerOverlap="false"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="16dp" >
+    android:layout_height="130dp"
+    android:layout_marginStart="3dp"
+    android:layout_marginEnd="3dp"
+    android:layout_marginTop="3dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/parent_layout"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="6dp"
+        tools:ignore="MissingConstraints">
 
 
-    <ImageView
-        android:id="@+id/imageView_background"
-        android:layout_width="0dp"
-        android:layout_height="135dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/container_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/image_report_item_report"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ic_image_black_24dp" />
 
-    <ImageView
-        android:id="@+id/image_report_item_report"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/backgroundColor"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView_background"
-        app:layout_constraintStart_toStartOf="@+id/imageView_background"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.62" />
+        <TextView
+            android:id="@+id/item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="20dp"
+            android:text="Date"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_background" />
 
-    <TextView
-        android:id="@+id/status_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="Status: "
-        android:textSize="10sp"
-        android:textColor="@android:color/holo_green_dark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/imageView_background"
-        app:layout_constraintTop_toBottomOf="@+id/item_longitude_report"
-        app:layout_constraintVertical_bias="0.855" />
+        <TextView
+            android:id="@+id/item_latitude_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="40dp"
+            android:text="Latitude" />
 
-    <TextView
-        android:id="@+id/item_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="Date"
-        app:layout_constraintEnd_toEndOf="@+id/imageView_background"
-        app:layout_constraintHorizontal_bias="0.475"
-        app:layout_constraintStart_toEndOf="@+id/image_report_item_report"
-        app:layout_constraintTop_toTopOf="@+id/image_report_item_report" />
+        <TextView
+            android:id="@+id/item_longitude_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="60dp"
+            android:text="Longitude" />
 
-    <TextView
-        android:id="@+id/item_latitude_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp"
-        android:text="latitude"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_report_item_report"
-        app:layout_constraintTop_toBottomOf="@+id/item_date" />
+        <TextView
+            android:id="@+id/status_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="85dp"
+            android:layout_marginEnd="8dp"
+            android:text="Status: "
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="10sp" />
 
-    <TextView
-        android:id="@+id/item_longitude_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp"
-        android:text="longitude"
-        app:layout_constraintEnd_toEndOf="@+id/imageView_background"
-        app:layout_constraintStart_toEndOf="@+id/image_report_item_report"
-        app:layout_constraintTop_toBottomOf="@+id/item_latitude_report" />
-
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
