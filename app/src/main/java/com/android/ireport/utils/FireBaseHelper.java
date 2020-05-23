@@ -29,11 +29,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 
 public class FireBaseHelper {
@@ -385,7 +387,7 @@ public class FireBaseHelper {
         });
     }
 
-    public void uploadNewReportAndPhoto(String reportDescription, int imageCount, String imageUrl,
+    public void uploadNewReportAndPhoto(String reportDescription, String imageUrl,
                                         String latitude, String longitude) {
         Log.d(TAG, "uploadNewReport: Upload new report and photo.");
 
@@ -393,7 +395,7 @@ public class FireBaseHelper {
         FilePaths filePaths = new FilePaths();
         String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference storageReference = mStorageReference
-                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + generateRandomString());
 
         Bitmap bitmap = ImageManager.getBitmap(imageUrl);
         byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
@@ -438,7 +440,7 @@ public class FireBaseHelper {
         });
     }
 
-    public void uploadNewReportAndPhoto(String reportDescription, int imageCount, Bitmap bitmap,
+    public void uploadNewReportAndPhoto(String reportDescription, Bitmap bitmap,
                                         String latitude, String longitude) {
         Log.d(TAG, "uploadNewReport: Upload new report and photo.");
 
@@ -446,7 +448,7 @@ public class FireBaseHelper {
         FilePaths filePaths = new FilePaths();
         String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference storageReference = mStorageReference
-                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + (imageCount + 1));
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + user_id + "/photo" + generateRandomString());
 
         byte[] bytes = ImageManager.getByteFromBitmap(bitmap, 100);
 
@@ -598,5 +600,17 @@ public class FireBaseHelper {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
         sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+2"));
         return sdf.format(new Date());
+    }
+
+    private String generateRandomString(){
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 15;
+        Random random = new Random();
+
+        return random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }

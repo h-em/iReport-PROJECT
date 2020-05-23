@@ -66,7 +66,7 @@ public class EditReportFragment extends Fragment {
         date.setText("Date: " + args.getString("report_date"));
         details.setText("Description: " + args.getString("report_details"));
         location.setText("Latitude: " + args.getString("report_latitude")
-                + "  Longitude: " + args.getString("report_longitude"));
+                + "\nLongitude: " + args.getString("report_longitude"));
         status.setText("Current status: " + args.getString("report_status").toUpperCase());
 
         String imgUrl = args.getString("report_photo_url");

@@ -66,6 +66,10 @@
                 android:background="@color/white"
                 android:minWidth="200dp"
                 android:minHeight="300dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark"/>
 
             <TextView
                 android:id="@+id/item_date"
@@ -99,6 +103,13 @@
                 android:layout_marginBottom="8dp"
                 android:text="Details"
                 android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark"
+                android:layout_marginTop="5dp"/>
+
         </LinearLayout>
     </ScrollView>
 

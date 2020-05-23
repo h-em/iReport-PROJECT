@@ -52,7 +52,6 @@ public class NextActivity extends AppCompatActivity {
 
 
     private String mAppend = "file:/";
-    private int imageCount = 0;
     private Intent intent;
 
     @SuppressLint("MissingPermission")
@@ -111,12 +110,12 @@ public class NextActivity extends AppCompatActivity {
                 // if the image comes from GalleryFragment with extra imageUrl
                 if (intent.hasExtra(getString(R.string.selected_image))) {
                     String imgUrl = intent.getStringExtra(getString(R.string.selected_image));
-                    mFirebaseHelper.uploadNewReportAndPhoto(reportDescription, imageCount, imgUrl, latitude, longitude);
+                    mFirebaseHelper.uploadNewReportAndPhoto(reportDescription, imgUrl, latitude, longitude);
                 }
                 // if the image comes from PhotoFragment with extra bitmap
                 else if(intent.hasExtra(getString(R.string.selected_bitmap))){
                     Bitmap bitmap = (Bitmap) intent.getParcelableExtra(getString(R.string.selected_bitmap));
-                    mFirebaseHelper.uploadNewReportAndPhoto(reportDescription, imageCount, bitmap,latitude, longitude);
+                    mFirebaseHelper.uploadNewReportAndPhoto(reportDescription, bitmap,latitude, longitude);
                 }
 
                 //small delay(it gives time for images to update into firebase)
@@ -174,8 +173,6 @@ public class NextActivity extends AppCompatActivity {
         Log.d(TAG, "setupFirebaseAuth: setting up firebase auth.");
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         myRef = mFirebaseDatabase.getReference();
-        Log.d(TAG, "onDataChange: image count: " + imageCount);
-
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -196,7 +193,7 @@ public class NextActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                imageCount = mFirebaseHelper.getNumberOfUserReports(dataSnapshot);
+                int imageCount = mFirebaseHelper.getNumberOfUserReports(dataSnapshot);
                 Log.d(TAG, "onDataChange: image count: " + imageCount);
             }
             @Override
